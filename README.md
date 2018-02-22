@@ -5,10 +5,10 @@ This repository holds the codebases for the peptide-protein docking procedure ("
 
 The molecular modeling simulations consisted of 2 models. The first model used a configuration of residues 22-34 of a nisin mutant where residue 29 is serine and is structurally aligned so that residues 22-34 fit into the tunnel region of the NSR molecule. The second model was also aligned to fit into the tunnel region of the NSR enzyme only this time residue 29 has been mutated to proline.
 
-# Creating the NSR-Nisin pdb file  
+### Creating the NSR-Nisin pdb file  
 
 
-To create a pdb file for the NSR-Nisin complex, individual files for both NSR are neeed. This requirement can be satified quite easily by using the R package bio3d like so
+To create a pdb file for the NSR-Nisin complex, individual files for both NSR and Nisin are neeed. This requirement can be satified quite easily by using the R package bio3d like so
 
 ```{r Initial - version}
 
@@ -19,13 +19,13 @@ To create a pdb file for the NSR-Nisin complex, individual files for both NSR ar
 > # with a separate file for each chain
 > get.pdb("1wco", URLonly = F, split=TRUE, path="split_chain.nisin", multi=T)
 ```
-For the NSR molcule the pdb file 4Y68 was used and for the nisin the 1wco pdb file was used where Protein Databank Accession numeber for both files came from their respective papers [2,3]
+For the NSR molecule the pdb file 4Y68 was used and for the nisin molecule the 1wco pdb file was used where Protein Databank Accession numbers for both files came from their respective papers [2,3]
 
-# Docking Procedure
- To determine a starting configuration for the NSR-Nisin complex a docking program Autodock for ligand and protein binding was used [4]. This produced 9 possible binding conformations for the NSR-Nisin complex. Out of these 9 states the 7th conformation state was chosen being the state which showed most favorable interaction between residues 29 of nisin and residues 236-240 of the active site in NSR. In this model the NSR-nisin complex had serine for residue 29. The molecular visualisation package Chimera was then used to mutate residue 29 to proline and the subsequent configuration saved as a different pdb file. Again the docking program Autodock was used to create a starting configuration for the NSR-Nisin complex. In this case the 1st conformation was chosen for the same reasons as previously. Then both chosen conformation states (one with serine, the other with proline) were saved as separate pdb files to be used as starting configurations in the molcular modeling simulation.
+## Docking Procedure
+To determine a starting configuration for the NSR-Nisin complex a docking program Autodock for ligand and protein binding was used [4]. This produced 9 possible binding conformations for the NSR-Nisin complex. Out of these 9 states the 7th conformation state was chosen being the state which showed the most favorable interaction between residues 29 of nisin and residues 236-240 of the active site in NSR. In this model the NSR-nisin complex had serine for residue 29. The molecular visualisation package Chimera was then used to mutate residue 29 to proline and residue 30 to valine and the subsequent configuration saved as a different pdb file. Again the docking program Autodock was used to create a starting configuration for the NSR-Nisin complex. In this case the 1st conformation was chosen for the same reasons as previously. Then both chosen conformation states (one with serine, the other with proline) were saved as separate pdb files to be used as starting configurations in the molcular modeling simulation.
 
 
-# Molecular Modelling 
+### Molecular Modelling 
 
 To run the MD simulation the Amber workflow was used [5]. This consisted of the following steps.
 
@@ -45,7 +45,7 @@ To run the MD simulation the Amber workflow was used [5]. This consisted of the 
 
 - Use mmpbsa to calculate binding energies of residues.
 
-In what follows the procedure for workflow as applied to the NSR-Nisin model with serine is described. The steps for the workflow as applied to the NSR-Nisin model with proline are identical. Here the Amber 16 suite of programs was used [5]. To start the pdb files from the docking procedure step were prepared for use with Amber’s LEaP program [6]. This required running the following Linux command.
+In what follows the procedure for the workflow as applied to the NSR-Nisin model with serine is described. The steps for the workflow as applied to the NSR-Nisin model with proline are identical. Here the Amber 16 suite of programs was used [5]. To start the pdb files from the docking procedure step were prepared for use with Amber’s LEaP program [6]. This required running the following Linux command.
 
 ```bash
 
@@ -56,9 +56,9 @@ $ reduce -Trim recptor.pdb > recptorNoH.pdb
 
 ```
 
-Here Nisinmol7.pdb was the fie created by Autodock for the 7th binding conformation state and gfp.pdb the output file from the pdb4amber program. And 4Y68_A.pdb was the pdb file for chain A in the NSR protein. The pdb4amber program changed the residues labled HIS to HIE and indicated that the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) were not recognised by LEaP. Also the reduce program with the -Trim flag strips all hydrogens from the pdb file [7]
+Here Nisinmol7.pdb was the fie created by Autodock for the 7th binding conformation state and ```bash gfp.pdb``` the output file from the pdb4amber program. And ```bash 4Y68_A.pdb``` was the pdb file for chain A in the NSR protein. The ```bash pdb4amber``` program changed the residues labled HIS to HIE and indicated that the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) were not recognised by LEaP. Also the ```bash reduce``` program with the ```bash -Trim``` flag strips all hydrogens from the pdb file [7]
 
-To deal with the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) the respective entries in the RCSB Protein Data Bank were accessed and the respective .cif files downloaded. The following BASH code was then run using several programs from Amber.
+To deal with the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) the respective entries in the RCSB Protein Data Bank were accessed and the respective ```bash .cif``` files downloaded. The following BASH code was then run using several programs from Amber.
 
 ```bash
 
@@ -70,4 +70,18 @@ $ prepgen -i dha.ac -o dha.prepin -m dha.mc -rn DHA
 $ parmchk2 -i dha.prepin -f prepi -o dha.frcmod -a Y -p parm10.dat
 ```
 
-The amber program antechamber can read the .cif files of the nonstandard residues and assign partial charges and atom types to the the nonstandard residues based on the bcc charge scheme 8. This will output .ac files which have charge and bonding information for the nonstandard residues. These will then used as input to the prepgen program along with a custom made mc file that tells the prepgen program what atoms to ignore from the residue (for peptide bonding). The mc file should look like so
+The amber program antechamber can read the ```bash .cif``` files of the nonstandard residues and assign partial charges and atom types to the the nonstandard residues based on the bcc charge scheme[8]. This will output ```bash .ac``` files which have charge and bonding information for the nonstandard residues. These will then used as input to the prepgen program along with a custom made ```bash mc``` file that tells the prepgen program what atoms to ignore from the residue (for peptide bonding). The ```bash mc``` file should look like so
+
+```bash
+HEAD_NAME N 
+TAIL_NAME C 
+MAIN_CHAIN CA 
+OMIT_NAME OXT 
+OMIT_NAME HXT 
+PRE_HEAD_TYPE C 
+POST_TAIL_TYPE N 
+CHARGE 0.0
+```
+
+The HEAD NAME and TAIL NAME lines identify the atoms that will connect to the previous and following amino acids, respectively. The MAIN CHAIN lines list the atoms along the chain that connect the head and the tail atoms. The OMIT NAME lines list the atoms in the nonstandard residue that should be removed from the final structure, as they are not present in the intact protein. The PRE HEAD TYPE and POST TAIL TYPE lines let prepgen know what atom types in the surrounding protein will be used for the covalent connection. The CHARGE line gives the total charge on the residue; prepgen will ensure that the charges of the ”omitted” atoms are redistributed among the remaining atoms so that the total charge is correct (i.e., 0 in this case).The prepgen program then outputs .prepin files which are the inputed into the parmchk2 program that create the .frcmod files using paramters from the gaff.dat and parm10.dat parameter files. Next the .prepin and .frcmod files were read into the LEaP program
+
