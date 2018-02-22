@@ -56,9 +56,9 @@ $ reduce -Trim recptor.pdb > recptorNoH.pdb
 
 ```
 
-Here Nisinmol7.pdb was the fie created by Autodock for the 7th binding conformation state and ```bash gfp.pdb``` the output file from the pdb4amber program. And ```bash 4Y68_A.pdb``` was the pdb file for chain A in the NSR protein. The ```bash pdb4amber``` program changed the residues labled HIS to HIE and indicated that the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) were not recognised by LEaP. Also the ```bash reduce``` program with the ```bash -Trim``` flag strips all hydrogens from the pdb file [7]
+Here ```Nisinmol7.pdb``` was the fie created by Autodock for the 7th binding conformation state and ```gfp.pdb``` the output file from the pdb4amber program. And ```4Y68_A.pdb``` was the pdb file for chain A in the NSR protein. The ```pdb4amber``` program changed the residues labled HIS to HIE and indicated that the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) were not recognised by LEaP. Also the ```reduce``` program with the ```-Trim``` flag strips all hydrogens from the pdb file [7]
 
-To deal with the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) the respective entries in the RCSB Protein Data Bank were accessed and the respective ```bash .cif``` files downloaded. The following BASH code was then run using several programs from Amber.
+To deal with the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) the respective entries in the RCSB Protein Data Bank were accessed and the respective ```.cif``` files downloaded. The following BASH code was then run using several programs from Amber.
 
 ```bash
 
@@ -70,7 +70,7 @@ $ prepgen -i dha.ac -o dha.prepin -m dha.mc -rn DHA
 $ parmchk2 -i dha.prepin -f prepi -o dha.frcmod -a Y -p parm10.dat
 ```
 
-The amber program antechamber can read the ```bash .cif``` files of the nonstandard residues and assign partial charges and atom types to the the nonstandard residues based on the bcc charge scheme[8]. This will output ```bash .ac``` files which have charge and bonding information for the nonstandard residues. These will then used as input to the prepgen program along with a custom made ```bash mc``` file that tells the prepgen program what atoms to ignore from the residue (for peptide bonding). The ```bash mc``` file should look like so
+The amber program antechamber can read the ```bash .cif``` files of the nonstandard residues and assign partial charges and atom types to the the nonstandard residues based on the bcc charge scheme[8]. This will output ``` .ac``` files which have charge and bonding information for the nonstandard residues. These will then used as input to the prepgen program along with a custom made ``` mc``` file that tells the prepgen program what atoms to ignore from the residue (for peptide bonding). The ``` mc``` file should look like so
 
 ```bash
 HEAD_NAME N 
@@ -83,5 +83,27 @@ POST_TAIL_TYPE N
 CHARGE 0.0
 ```
 
-The HEAD NAME and TAIL NAME lines identify the atoms that will connect to the previous and following amino acids, respectively. The MAIN CHAIN lines list the atoms along the chain that connect the head and the tail atoms. The OMIT NAME lines list the atoms in the nonstandard residue that should be removed from the final structure, as they are not present in the intact protein. The PRE HEAD TYPE and POST TAIL TYPE lines let prepgen know what atom types in the surrounding protein will be used for the covalent connection. The CHARGE line gives the total charge on the residue; prepgen will ensure that the charges of the ”omitted” atoms are redistributed among the remaining atoms so that the total charge is correct (i.e., 0 in this case).The prepgen program then outputs .prepin files which are the inputed into the parmchk2 program that create the .frcmod files using paramters from the gaff.dat and parm10.dat parameter files. Next the .prepin and .frcmod files were read into the LEaP program
+The HEAD NAME and TAIL NAME lines identify the atoms that will connect to the previous and following amino acids, respectively. The MAIN CHAIN lines list the atoms along the chain that connect the head and the tail atoms. The OMIT NAME lines list the atoms in the nonstandard residue that should be removed from the final structure, as they are not present in the intact protein. The PRE HEAD TYPE and POST TAIL TYPE lines let prepgen know what atom types in the surrounding protein will be used for the covalent connection. The CHARGE line gives the total charge on the residue; prepgen will ensure that the charges of the ”omitted” atoms are redistributed among the remaining atoms so that the total charge is correct (i.e., 0 in this case).The prepgen program then outputs ```.prepin``` files which are the inputed into the parmchk2 program that create the ```.frcmod``` files using paramters from the gaff.dat and parm10.dat parameter files. Next the ```.prepin``` and ```.frcmod``` files were read into the LEaP program
+
+```bash
+
+Macintosh-109add6f31eb:111.ROUGH tonyblake$ tleap
+-I: Adding /Users/tonyblake/amber16/dat/leap/prep to search path.
+-I: Adding /Users/tonyblake/amber16/dat/leap/lib to search path.
+-I: Adding /Users/tonyblake/amber16/dat/leap/parm to search path.
+-I: Adding /Users/tonyblake/amber16/dat/leap/cmd to search path.
+
+Welcome to LEaP!
+(no leaprc in search path)
+> source leaprc.protein.ff14SB       #reads in ff14SB forcefield parameters
+> set default PBRadii mbondi3        
+> loadamberprep dbb.prepin           #reads in prep file for DBB
+> loadamberparams dbb.frcmod         #reads in forcefield parameters for DBB
+> loadamberprep dha.prepin           #reads in prep file for DHA
+> loadamberparams dha.frcmod         #reads in forcefield parameters for DHA
+> x=loadPDB gfp.pdb                  #reads in gfp.pdb
+> saveamberparm x gfp.prmtop gfp.inpcrd  # creates topology and coordinate files
+```
+
+At this point however LEaP began to complain about missing parameters for bond lengths, bond angles and dihedral angles. The different values for these parameters (they are different fior each atom) are used with the amber force field to determine the energies for the NSR-Nisin complex[9]. 
 
