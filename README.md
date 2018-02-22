@@ -5,7 +5,7 @@ This repository holds the codebases for the peptide-protein docking procedure ("
 
 The molecular modeling simulations consisted of 2 models. The first model used a configuration of residues 22-34 of a nisin mutant where residue 29 is serine and is structurally aligned so that residues 22-34 fit into the tunnel region of the NSR molecule. The second model was also aligned to fit into the tunnel region of the NSR enzyme only this time residue 29 has been mutated to proline.
 
-### Creating the NSR-Nisin pdb file  
+## Creating the NSR-Nisin pdb file  
 
 
 To create a pdb file for the NSR-Nisin complex, individual files for both NSR and Nisin are neeed. This requirement can be satified quite easily by using the R package bio3d like so
@@ -25,7 +25,7 @@ For the NSR molecule the pdb file 4Y68 was used and for the nisin molecule the 1
 To determine a starting configuration for the NSR-Nisin complex a docking program Autodock for ligand and protein binding was used [4]. This produced 9 possible binding conformations for the NSR-Nisin complex. Out of these 9 states the 7th conformation state was chosen being the state which showed the most favorable interaction between residues 29 of nisin and residues 236-240 of the active site in NSR. In this model the NSR-nisin complex had serine for residue 29. The molecular visualisation package Chimera was then used to mutate residue 29 to proline and residue 30 to valine and the subsequent configuration saved as a different pdb file. Again the docking program Autodock was used to create a starting configuration for the NSR-Nisin complex. In this case the 1st conformation was chosen for the same reasons as previously. Then both chosen conformation states (one with serine, the other with proline) were saved as separate pdb files to be used as starting configurations in the molcular modeling simulation.
 
 
-### Molecular Modelling 
+## Molecular Modelling 
 
 To run the MD simulation the Amber workflow was used [5]. This consisted of the following steps.
 
@@ -105,5 +105,107 @@ Welcome to LEaP!
 > saveamberparm x gfp.prmtop gfp.inpcrd  # creates topology and coordinate files
 ```
 
-At this point however LEaP began to complain about missing parameters for bond lengths, bond angles and dihedral angles. The different values for these parameters (they are different fior each atom) are used with the amber force field to determine the energies for the NSR-Nisin complex[9]. 
+At this point however LEaP began to complain about missing parameters for bond lengths, bond angles and dihedral angles. The different values for these parameters (they are different fior each atom) are used with the amber force field to determine the energies for the NSR-Nisin complex[9].  These values are the values for parameters kb, r0, kθ, θ0, γ, Vn, Aij, Bij which are specified in the ```.frcmod``` and ```.dat``` files. So to overcome the ”missing parameter” issue values from the ```gaff2.dat``` file were used as the values for the missing parameter indicated by LEaP. The underlying cause of the ”missing parameter” issue was LEaP’s inability to recognise the 3 peptide bonds and associated angles and dihedral angles of LYS-DBB, ALA-DBB, and VAL-DHA. Thus the ```extra.frcmod``` file was created to supply these missing values to LEaP. 
 
+```bash
+
+Macintosh-109add6f31eb:003.SANDER tonyblake$ vim extra.frcmod 
+
+Remark line goes here
+MASS
+NT 14.010        0.530               same as n4
+C  12.010        0.616               same as c
+O  16.000        0.434               same as o
+CT 12.010        0.878               same as c3
+CD 12.010        0.360               same as c2
+CM 12.010        0.360               same as c2
+CX 12.010        0.878               same as c3
+N  14.01         0.530
+
+BOND
+C -NT  255.5    1.5460             same as c -n4
+
+ANGLE
+O-C -NT   69.53     118.830
+C -NT-H   44.63     111.120          same as c -n4-hn SOURCE3_SOURCE5
+C -NT-CT  62.14     108.760          same as c -n4-c3        SOURCE5
+CX-C -NT  64.28     112.260          same as c3-c -n4        SOURCE3
+CD-C -N   86.65     124.990           same as c2-c2-nh            SOURCE3
+C -NT-CD  63.556    112.580          same as c2-n4-c2
+
+DIHE
+
+CX-C -NT-H    1    1.025       180.000          -2.
+O-C -NT-CT    4   10.000       180.000           2.
+CX-C -NT-CT   9    1.400         0.000           3.
+O-C -NT-H     1    2.500       180.000          -2.
+C -NT-CD-CM   6    0.000       180.000           3.
+CX-C -NT-CD   9    1.400         0.000           3.
+O-C -NT-CD    4   10.000       180.000           2.
+C -NT-CD-C    6    0.000        80.000           3.
+CM-CD-C -N    4   26.600       180.000           2.
+NT-CD-C -N    4   26.600       180.000           2.
+
+IMPROPER
+
+NONBON
+```
+
+There was one other small issue which seems to be a bug with the LEaP program. In some instances after the extra.frcmod was read into leap and the command run for creating the topology and coordinate files LEaP would still not recognise the parameters for 1 or 2 dihedral angles
+
+```bash
+
+> loadamberparams extra.frcmod         
+Loading parameters: ./extra.frcmod
+Reading force field modification type file (frcmod)
+Reading title:
+Remark line goes here
+> saveamberparm x gfp.prmtop gfp.prmcrd
+Checking Unit.
+WARNING: The unperturbed charge of the unit: 2.000000 is not zero.
+
+ -- ignoring the warning.
+
+Building topology.
+Building atom parameters.
+Building bond parameters.
+Building angle parameters.
+Building proper torsion parameters.
+ ** No torsion terms for  O-C-NT-CD
+ ** No torsion terms for  CX-C-NT-CD
+Building improper torsion parameters.
+old PREP-specified impropers:
+ <DBB 2>:  CA   +M   C    O   
+ <DBB 4>:  CA   +M   C    O   
+ <DHA 12>:  C    CB   CA   N   
+ <DHA 12>:  CA   HB1  CB   HB2 
+ <DHA 12>:  CA   +M   C    O   
+ total 30 improper torsions applied
+ 5 improper torsions in old prep form
+Building H-Bond parameters.
+Incorporating Non-Bonded adjustments.
+Parameter file was not saved.
+```
+To solve this issue one only needs to move the the lines in the extra.frcmod corresponding to those 2 dihedral angles with missing parameters to the top of the dihedral angle parameter list. So if the above example had to be changed then the corrected version would look like so.
+
+```bash
+
+DIHE
+
+O-C -NT-CD    4   10.000       180.000           2.
+CX-C -NT-CD   9    1.400         0.000           3.
+C -NT-CD-C    6    0.000        80.000           3.
+CX-C -NT-H    1    1.025       180.000          -2.
+O-C -NT-CT    4   10.000       180.000           2.
+CX-C -NT-CT   9    1.400         0.000           3.
+O-C -NT-H     1    2.500       180.000          -2.
+C -NT-CD-CM   6    0.000       180.000           3.
+CM-CD-C -N    4   26.600       180.000           2.
+NT-CD-C -N    4   26.600       180.000           2.
+
+IMPROPER
+
+NONBON
+```
+
+Then LEaP is able to read all of the nisin molecule (```gfp.pdb```) and will create the corresponding topology (```gfp.prmtop```) and coordinate files (```gfp.prmcrd```). When this happens LEaP will output the following onto the screen
