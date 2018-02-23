@@ -209,3 +209,86 @@ NONBON
 ```
 
 Then LEaP is able to read all of the nisin molecule (```gfp.pdb```) and will create the corresponding topology (```gfp.prmtop```) and coordinate files (```gfp.prmcrd```). When this happens LEaP will output the following onto the screen
+
+```bash
+> loadamberparams extra.frcmod         
+Loading parameters: ./extra.frcmod
+Reading force field modification type file (frcmod)
+Reading title:
+Remark line goes here
+> saveamberparm x gfp.prmtop gfp.prmcrd
+Checking Unit.
+WARNING: The unperturbed charge of the unit: 2.000000 is not zero.
+
+ -- ignoring the warning.
+
+Building topology.
+Building atom parameters.
+Building bond parameters.
+Building angle parameters.
+Building proper torsion parameters.
+Building improper torsion parameters.
+old PREP-specified impropers:
+ <DBB 2>:  CA   +M   C    O   
+ <DBB 4>:  CA   +M   C    O   
+ <DHA 12>:  C    CB   CA   N   
+ <DHA 12>:  CA   HB1  CB   HB2 
+ <DHA 12>:  CA   +M   C    O   
+ total 30 improper torsions applied
+ 5 improper torsions in old prep form
+Building H-Bond parameters.
+Incorporating Non-Bonded adjustments.
+Not Marking per-residue atom chain types.
+Marking per-residue atom chain types.
+  (Residues lacking connect0/connect1 - 
+   these dont have chain types marked:
+
+	res	total affected
+
+	CLYS	1
+	NLYS	1
+  )
+ (no restraints)
+```
+
+Then to carry out the rest of the LEaP procedure for the NSR enzyme, solvating nisin and NSR, combining nisin and NSR, and adding counterions the following commands were issued.
+
+```bash
+> source leaprc.water.tip3p
+> solvateBox x TIP3PBOX 10.0 
+> saveamberparm x gfp.wat.prmtop gfp.wat.prmcrd 
+> REC=loadPDB recptor.pdb
+> NSR=loadPDB recptorNoH.pdb
+> saveamberparm NSR nsr.prmtop nsr.prmcrd
+> solvateBox NSR TIP3PBOX 10.0
+> saveamberparm NSR nsr.wat.prmtop nsr.wat.prmcrd
+> LIG=loadPDB gfp.pdb
+> saveamberparm LIG test.prmtop test.prmcrd
+> PROT=loadPDB recptorNoH.pdb
+> saveamberparm PROT test2.prot.prmtop test2.prot.prmcrd
+> COM = combine {PROT LIG}
+> saveamberparm COM com.prmtop com.prmcrd
+> solvateBox COM TIP3PBOX 10.0
+> saveamberparm COM com.wat.prmtop com.wat.prmcrd
+> addIons x Cl- 0  
+> saveamberparm x gfp.neutral.prmtop gfp.neutral.prmcrd
+> addIons LIG Cl- 0
+> saveamberparm LIG gfp.neutral2.prmtop gfp.neutral2.prmcrd
+> saveamberparm x gfp.wat.neutral.prmtop gfp.wat.neutral.prmcrd
+> addIons PROT Cl- 0 
+> saveamberparm PROT nsr.neutral2.prmtop nsr.neutral2.prmcrd 
+> addIons COM Cl- 0 
+> saveamberparm COM com.neutral2.prmtop com.neutral2.prmcrd
+> saveamberparm COM com.wat.neutral2.prmtop com.wat.neutral2.prmcrd
+> addIons NSR Cl- 0
+> saveamberparm NSR nsr.wat.neutral2.prmtop nsr.wat.neutral2.prmcrd 
+> LIGNEUT=loadPDB gfp.pdb
+> saveamberparm LIGNEUT test3.prmtop test3.prmcrd
+> PROTNEUT=loadPDB recptorNoH.pdb 
+> COMNEUT=combine {PROTNEUT LIGNEUT}  
+> addIons COMNEUT Cl- 0
+> save COMNEUT com.neutral0.prmtop com.neutral0.prmcrd
+> saveamberparm COMNEUT com.neutral0.prmtop com.neutral0.prmcrd
+```
+These commands produced many files that needed to be used with ```sander```, ```cpptraj``` and ```MMPBSA.py```. Next the sander program was used to carry out the molecular simulation. To use this program an input file needed to be created that would inform the program of the physical processes to simu- late. Noting the good results of a previous study ?, the same parameters were employed. Firstly the system was minimisied in a two stage process. The input file for the first minimisation stage looks like this.
+
