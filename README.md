@@ -292,3 +292,234 @@ Then to carry out the rest of the LEaP procedure for the NSR enzyme, solvating n
 ```
 These commands produced many files that needed to be used with ```sander```, ```cpptraj``` and ```MMPBSA.py```. Next the sander program was used to carry out the molecular simulation. To use this program an input file needed to be created that would inform the program of the physical processes to simu- late. Noting the good results of a previous study ?, the same parameters were employed. Firstly the system was minimisied in a two stage process. The input file for the first minimisation stage looks like this.
 
+```bash
+min.in: 
+&cntrl
+imin=1, maxcyc=250, ncyc=50, ntmin=1,ntx = 1, ntc = 1, ntf = 1, ntb = 1,
+ntp = 0, ntwx = 10000, ntwe = 0, ntpr = 10000, cut = 8.0, 
+ntr = 1, restraintmask = ':1-287 & !@H=', restraint_wt = 25.0, /
+```
+
+This means that harmonic restraints with a force constant of 25 kcal/mol/Angstrom^2 were applied to all protein atoms while all other atoms were free to move during 50 cycles of steepest descent (SD) and 200 cycles of conjugate gradient (CG) minimization. In the second stage (using a separate input file with adjusted parameters, min2.in), the force constant of the harmonic restraints was reduced to 5 kcal/mol/Anstrom^2, and 50 cycles of SD and 200 cycles of CG minimization were performed.
+
+```bash
+sander -O -i min.in -o min.out -p com.wat.neutral2.prmtop -c com.wat.neutral2.prmcrd /
+-r 01\_Min.rst -inf 01\_Min.mdinfo -ref com.wat.neutral2.prmcrd
+```
+
+The sander program takes the input file min.in with the instructions on how to minimise, the topology file ```com.wat.neutral2.prmtop``` also as input, the coordinate file ```com.wat.neutral2.prmcrd``` again as input and the cooridinate file to act as reference for the restraint intsructions. It outputs the ```min.out``` file contain information on each time step of the minisation phase and a restart file ```01_Min.rst``` so the command for the second stage knows the coordinates to start from.
+
+```bash
+sander -O -i min.in -o min.out -p com.wat.neutral2.prmtop -c com.wat.neutral2.prmcrd /
+-r 01\_Min.rst -inf 01\_Min.mdinfo -ref com.wat.neutral2.prmcrd
+
+sander -O -i min2.in -o min2.out -p com.wat.neutral2.prmtop -c 01\_Min.rst /
+-r 01\_Min2.rst -inf 01\_Min.mdinfo -ref 01\_Min.rst
+```
+Next the system is heated up for a period of 50 picoseconds from 100K ro 300K with volume held constant. This is the input file for the heating stage.
+
+```bash
+heat.in:
+&cntrl
+nstlim=25000, dt=0.002, ntx=1, irest=0, ntpr=500, ntwr=500, ntwx=500,
+tempi =100.0, temp0=300.0, ntt=1, tautp=2.0, ig=-1, ntc = 2, ntf = 2, 
+ntp = 0, ntb=1, nrespa=2, ntwe = 0, cut = 8.0, 
+ntr = 1, restraintmask = ':1-287 & !@H=', restraint_wt = 5.0, /
+```
+
+Then the density was adjusted to 1 g/cm^3 during 30 ps while keeping pressure constant . The input file for this stage looked like this
+
+```bash
+equib.in:
+&cntrl
+nstlim=15000, dt=0.002, ntx=5, irest=1, ntpr=500, ntwr=500, ntwx=500, temp0=300.0, 
+ntt=1, tautp=2.0, ig=-1, ntc = 2, ntf = 2, ntp = 1, ntb=2, nrespa=1, ntwe = 0, cut = 8.0, 
+ntr = 1, restraintmask = ':1-287 & !@H=', restraint_wt = 5.0, /
+```
+
+Next the positional restraints were gradually reduced from 5 kcal/mol/Angstroms^2 to 0 kcal/mol/Angstroms^2 while keeping the volume constant. This was achieved in MD simulation by a series of 6 stages (each stage having a different input file with the value for ```restraint_wt``` being going from 5 to 0). Each stage was 10 picoseconds long. As an example here's the input file for when the restraint was 3 kcal/mol/Angstroms^2
+
+```bash
+equib4.in:heat com.neutral0
+&cntrl
+nstlim=5000, dt=0.002, ntx=5, irest=1, 
+ntpr=500, ntwr=500, ntwx=500, temp0=300.0, 
+ntt=1, tautp=2.0, ig=-1, ntc = 2, ntf = 2, ntp = 0, 
+ntb=1, nrespa=2, ntwe = 0, cut = 8.0, 
+ntr = 1, restraintmask = ':1-287 & !@H=', restraint_wt = 3.0, /
+```
+The commands to run these processes look like so. Note also the ```.mdcrd files```. These are the most important files (trajectory files) as they contain the binary informtaion that the programs ```cpptraj``` and ```MMPBSA.py``` will make use of to analyse the MD trajectories. 
+
+```bash
+$ sander -O -i heat.in -o heat.out -p com.wat.neutral2.prmtop -c 01\_Min2.rst /
+-r heat.rst -ref 01\_Min2.rst -x heat.mdcrd
+$ sander -O -i equib.in -o equib.out -p com.wat.neutral2.prmtop -c heat.rst /
+-r equib.rst -ref heat.rst -x equib.mdcrd
+$ sander -O -i equib2.in -o equib2.out -p com.wat.neutral2.prmtop -c equib.rst /
+-r equib2.rst -ref equib.rst -x equib2.mdcrd
+$ sander -O -i equib3.in -o equib3.out -p com.wat.neutral2.prmtop -c equib2.rst /
+-r equib3.rst -ref equib2.rst -x equib3.mdcrd
+$ sander -O -i equib4.in -o equib4.out -p com.wat.neutral2.prmtop -c equib3.rst /
+-r equib4.rst -ref equib3.rst -x equib4.mdcrd
+$ sander -O -i equib5.in -o equib5.out -p com.wat.neutral2.prmtop -c equib4.rst /
+-r equib5.rst -ref equib4.rst -x equib5.mdcrd
+sander -O -i equib6.in -o equib6.out -p com.wat.neutral2.prmtop -c equib5.rst /
+$ -r equib6.rst -ref equib5.rst -x equib6.mdcrd
+sander -O -i equib6.in -o equib6.out -p com.wat.neutral2.prmtop -c equib5.rst /
+-r equib7.rst -ref equib6.rst -x equib7.mdcrd
+```
+
+Finally the input file was changed to instruct a production run of 50 nanoseconds. This meant setting the total number of timesteps to =25000000. The command to run this part of the simulation uses the parallel processes program MPI (as otherwise it would take several years to complete the simulation). 
+
+```bash
+$ mpirun -np 4 $AMBERHOME/bin/sander.MPI -O -i prodser1ns1.in -p com.wat.neutral2.prmtop 
+-c prod40.rst -r prod41.rst -o prod41.out -x prod41.mdcrd    
+```
+
+For practical purposes the production run was split up into many stages (so as to able recover completed trajectory files in the event of a crash and also to not "hog the server"). So the previous line of code shows very near to the end of all the timesteps (from 33 to 34 nanoseconds).  Througout the full MD simulation long-range electrostatic interactions were treated using the particle mesh Ewald method[ref]. A distance cut off of 8 Angstroms was used to define short range electrostatic interactions. All bonds involving hydrogen were constrained by using the SHAKE algorithim [ref] which also required setting the timestep to be 2 femtoseconds. Trajectory files were created every picosecond. 
+
+## Trajectory Analysis
+
+To analyse the MD trajectory the programs ```cpptraj``` and  ```MMPBSA.py``` were used. To calculate the distance between the carbonyl carbon of CYS28 (NSR cleave point in nisin) and the sidechain Oxygen in residue 236 of NSR (active site) the ```dist``` command in ```cpptraj``` was used. The only requirments for ```cpptraj``` were the topology file ```com.wat.neutral2.prmtop``` and an input file specifying what trajectory files were to be used. This is an example of the ```cpptraj``` command used and also the contents of the input file.
+
+```bash
+$ cpptraj -p com.wat.neutral2.prmtop -i trajfiles.atom.ptraj
+
+# input file trajfiles.atom.ptraj
+trajin heat.mdcrd
+trajin equib1.mdcrd
+trajin equib2.mdcrd
+trajin equib3.mdcrd
+trajin equib4.mdcrd
+trajin equib5.mdcrd
+trajin equib6.mdcrd
+trajin equib7.mdcrd
+trajin test2.mdcrd
+trajin prod2.mdcrd
+trajin prod3.mdcrd
+trajin prod4.mdcrd
+trajin prod5.mdcrd
+trajin prod6.mdcrd
+trajin prod7.mdcrd
+trajin prod8.mdcrd
+trajin prod9.mdcrd
+trajin prod10.mdcrd
+trajin prod11.mdcrd
+trajin prod12.mdcrd
+trajin prod13.mdcrd
+trajin prod14.mdcrd
+trajin prod15.mdcrd
+trajin prod16.mdcrd
+trajin prod17.mdcrd
+trajin prod18.mdcrd
+trajin prod19.mdcrd
+trajin prod20.mdcrd
+trajin prod21.mdcrd
+trajin prod22.mdcrd
+trajin prod23.mdcrd
+trajin prod24.mdcrd
+trajin prod25.mdcrd
+trajin prod26.mdcrd
+trajin prod27.mdcrd
+trajin prod28.mdcrd
+trajin prod29.mdcrd
+trajin prod30.mdcrd
+trajin prod31.mdcrd
+trajin prod32.mdcrd
+trajin prod33.mdcrd
+trajin prod34.mdcrd
+trajin prod35.mdcrd
+
+
+distance SER236OtoCYS28C :206@3402 :294@4762 out SER236OtoCYS28C
+
+run
+```
+
+
+After the trajectory analysis has finished the output file SER236OtoCYS28C contains the distance between both points of interest for every picosecond of the trajectory. These can then be plotted using the ggplot2 program in R. The next part of the trajectory analysis involves determining what hydrogen bonds have formed over the duration of the simulation (35 nanoseconds). This was achieved by again using the ```cpptraj``` program and a different input file. Here is an example of the code and input file.
+
+```bash
+$ cpptraj -p com.wat.neutral2.prmtop -i hbondtraj.ptraj
+
+# input file hbondtraj.ptraj
+trajin heat.mdcrd
+trajin equib1.mdcrd
+trajin equib2.mdcrd
+trajin equib3.mdcrd
+trajin equib4.mdcrd
+trajin equib5.mdcrd
+trajin equib6.mdcrd
+trajin equib7.mdcrd
+trajin test2.mdcrd
+trajin prod2.mdcrd
+trajin prod3.mdcrd
+trajin prod4.mdcrd
+trajin prod5.mdcrd
+trajin prod6.mdcrd
+trajin prod7.mdcrd
+trajin prod8.mdcrd
+trajin prod9.mdcrd
+trajin prod10.mdcrd
+trajin prod11.mdcrd
+trajin prod12.mdcrd
+trajin prod13.mdcrd
+trajin prod14.mdcrd
+trajin prod15.mdcrd
+trajin prod16.mdcrd
+trajin prod17.mdcrd
+trajin prod18.mdcrd
+trajin prod19.mdcrd
+trajin prod20.mdcrd
+trajin prod21.mdcrd
+trajin prod22.mdcrd
+trajin prod23.mdcrd
+trajin prod24.mdcrd
+trajin prod25.mdcrd
+trajin prod26.mdcrd
+trajin prod27.mdcrd
+trajin prod28.mdcrd
+trajin prod29.mdcrd
+trajin prod30.mdcrd
+trajin prod31.mdcrd
+trajin prod32.mdcrd
+trajin prod33.mdcrd
+trajin prod34.mdcrd
+trajin prod35.mdcrd
+
+
+hbond All out All.hbvtime.dat solventdonor :WAT solventacceptor :WAT@O \
+  avgout All.UU.avg.dat solvout All.UV.avg.dat bridgeout All.bridge.avg.dat
+
+hbond Backbone :288-299@C,O,N,H avgout BB.avg.dat series uuseries bbhbond
+
+create nhbvtime All[UU] Backbone[UU] All[UV] All[Bridge]
+
+rms BBrmsd :288-299@C,CA,N out BBrmsd
+
+run
+```
+
+
+The important file to note here is the ```All.UU.avg.dat``` file. This contains all the percentages for hydrogen bond formation over the course of the trajectory. After the hydrogen bond calculation the ```MMPBSA.py``` was used to calculate the binding energies of the residues in nisin and the residues in the active site of (TASSAEM motif) NSR. This also required many of the files prepared earlier in the analysis using the LEaP program. Again here is an example of the command and the contents of the input file.
+
+```bash
+$AMBERHOME/bin/MMPBSA.py -O -i mmpbsa_per_res_decomp.in /
+-o FINAL_RESULTS_MMPBSA.dat -do FINAL_DECOMP_MMPBSA.dat /
+-sp com.wat.neutral2.prmtop -cp com.prmtop -rp nsr.prmtop -lp gfp.prmtop -y *.mdcrd
+
+# input file mmpbsa_per_res_decomp.in
+Per-residue GB and PB decomposition
+&general
+   endframe=35000, verbose=1, interval=100
+/
+&gb
+  igb=5, saltcon=0.100,
+/
+&decomp
+  idecomp=1, print_res="288-300"
+  dec_verbose=1,
+/
+```
+
+One final point to note. For the binding enbergy calculations the MM-GBSA (Generalised Born) method was used and not the MM-PBSA (Poisson-Boltzmann) method. The ```FINAL_DECOMP_MMPBSA.dat``` file has all the values of the binding energies for the residues specified in the input file and can then plotted using the ggplot2 in R \cite{gentleman, hadley}. 
