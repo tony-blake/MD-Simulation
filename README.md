@@ -1,7 +1,7 @@
 MD-Simulation
 =============
 
-This repository holds the codebases for the peptide-protein docking procedure ("Docking" folder) and the codebase for using the Amber suite of prorams ("Simulation" folder) to run a 50 nansecond Molecular Dynamic Simulation. Also here we describe in full the various steps that are required to set up and perform the simulation correctly.  
+This repository holds the codebases for the peptide-protein docking procedure ("Docking" folder) and the codebase for using the Amber suite of programs ("Simulation" folder) to run a 50 nansecond Molecular Dynamic Simulation. Also here we describe in full the various steps that are required to set up and perform the simulation correctly.  
 
 The molecular modeling simulations consisted of 2 models. The first model used a configuration of residues 22-34 of a nisin mutant where residue 29 is serine and is structurally aligned so that residues 22-34 fit into the tunnel region of the NSR molecule. The second model was also aligned to fit into the tunnel region of the NSR enzyme only this time residue 29 has been mutated to proline.
 
