@@ -1,0 +1,9 @@
+receptor = 4Y68_A.pdbqt
+ligand = 1wco_N_12copy.pdbqt
+center_x = 49.941
+center_y = 125.574
+center_z = -18.551
+size_x = 80
+size_y = 80 
+size_z = 80
+out = 1wco_N_12copy_vina.pdbqt
