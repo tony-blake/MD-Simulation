@@ -1,3 +1,6 @@
+File Descriptions
+=================
+
 This folder contains the files that are used at the start of the MD Simulation. One can generate the every other file from these base files by following the steps in the primary README file.
 
 ```nisinmol7.pdb``` - This is the starting configuration of the Nisin molecule.  
