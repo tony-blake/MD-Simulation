@@ -1,0 +1,4 @@
+equib4.in:heat com.neutral0
+&cntrl
+nstlim=5000, dt=0.002, ntx=5, irest=1, ntpr=500, ntwr=500, ntwx=500, temp0=300.0, ntt=1, tautp=2.0, ig=-1, ntc = 2, ntf = 2, ntp = 0, ntb=1, nrespa=2, ntwe = 0, cut = 8.0, ntr = 1, restraintmask = ':1-287 & !@H=', restraint_wt = 3.0, /
+
