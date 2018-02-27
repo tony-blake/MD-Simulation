@@ -1,0 +1,37 @@
+Remark line goes here
+MASS
+NT 14.010        0.530               same as n4
+C  12.010        0.616               same as c
+O  16.000        0.434               same as o
+CT 12.010        0.878               same as c3
+CD 12.010        0.360               same as c2
+CM 12.010        0.360               same as c2
+CX 12.010        0.878               same as c3
+N  14.01         0.530 
+
+BOND
+C -NT  255.5    1.5460             same as c -n4
+
+ANGLE
+O-C -NT   69.53     118.830           
+C -NT-H   44.63     111.120          same as c -n4-hn SOURCE3_SOURCE5 
+C -NT-CT  62.14     108.760          same as c -n4-c3        SOURCE5
+CX-C -NT  64.28     112.260          same as c3-c -n4        SOURCE3
+CD-C -N   86.65     124.990	      same as c2-c2-nh            SOURCE3
+C -NT-CD  63.556    112.580          same as c2-n4-c2
+
+DIHE
+CX-C -NT-CD   9    1.400         0.000           3.
+O-C -NT-CD    4   10.000       180.000           2.
+CX-C -NT-H    1    1.025       180.000          -2.
+O-C -NT-CT    4   10.000       180.000           2.
+CX-C -NT-CT   9    1.400         0.000           3.
+O-C -NT-H     1    2.500       180.000          -2.  
+C -NT-CD-CM   6    0.000       180.000           3.  
+C -NT-CD-C    6    0.000        80.000           3.  
+CM-CD-C -N    4   26.600       180.000           2.  
+NT-CD-C -N    4   26.600       180.000           2.  
+
+IMPROPER
+
+NONBON
