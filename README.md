@@ -19,10 +19,10 @@ To create a pdb file for the NSR-Nisin complex, individual files for both NSR an
 > # with a separate file for each chain
 > get.pdb("1wco", URLonly = F, split=TRUE, path="split_chain.nisin", multi=T)
 ```
-For the NSR molecule the pdb file 4Y68 was used and for the nisin molecule the 1wco pdb file was used where Protein Databank Accession numbers for both files came from their respective papers [2,3]
+For the NSR molecule the pdb file ```4Y68``` was used and for the nisin molecule the ```1wco``` pdb file was used where Protein Databank Accession numbers for both files came from their respective papers [2,3]
 
 ## Docking Procedure
-To determine a starting configuration for the NSR-Nisin complex a docking program Autodock for ligand and protein binding was used [4]. This produced 9 possible binding conformations for the NSR-Nisin complex. Out of these 9 states the 7th conformation state was chosen being the state which showed the most favorable interaction between residues 29 of nisin and residues 236-240 of the active site in NSR. In this model the NSR-nisin complex had serine for residue 29. The molecular visualisation package Chimera was then used to mutate residue 29 to proline and residue 30 to valine and the subsequent configuration saved as a different pdb file. Again the docking program Autodock was used to create a starting configuration for the NSR-Nisin complex. In this case the 1st conformation was chosen for the same reasons as previously. Then both chosen conformation states (one with serine, the other with proline) were saved as separate pdb files to be used as starting configurations in the molcular modeling simulation.
+To determine a starting configuration for the NSR-Nisin complex a docking program Autodock for ligand and protein binding was used [4]. This produced 9 possible binding conformations for the NSR-Nisin complex. Out of these 9 states the 7th conformation state was chosen being the state which showed the most favorable interaction between residues 29 of nisin and residues 236-240 of the active site in NSR. In this model the NSR-Nisin complex had serine for residue 29. The molecular visualisation package Chimera was then used to mutate residue 29 to proline and residue 30 to valine and the subsequent configuration saved as a different pdb file. Again the docking program Autodock was used to create a starting configuration for the NSR-Nisin complex. In this case the 1st conformation was chosen for the same reasons as previously. Then both chosen conformation states (one with serine, the other with proline) were saved as separate pdb files to be used as starting configurations in the molcular modeling simulation.
 
 
 ## Molecular Modelling 
@@ -31,21 +31,21 @@ To run the MD simulation the Amber workflow was used [5]. This consisted of the 
 
 - Prepare the pdb files using LEaP.
 
-- Prepare cif files for nonstandrad residues DBB and DHA.
+- Prepare ```cif``` files for nonstandrad residues DBB and DHA.
 
 - Use antechamber forcefield values to fill in for missing parameters.
 
-- Use antechamber to create prmtop and inpcrd files for each pdb file.
+- Use antechamber to create ```prmtop``` and ```inpcrd``` files for each pdb file.
 
-- Used sander to run MD simulation from prmtop and inpcrd files.
+- Used sander to run MD simulation from ```prmtop``` and ```inpcrd``` files.
 
-- Use cpptraj to analyse MD trajectory files for change of distances over time.
+- Use ```cpptraj``` to analyse MD trajectory files for change of distances over time.
 
-- Use cpptraj to determine H-bonds and water mediated interactions.
+- Use ```cpptraj``` to determine H-bonds and water mediated interactions.
 
-- Use mmpbsa to calculate binding energies of residues.
+- Use ```mmpbsa``` to calculate binding energies of residues.
 
-In what follows the procedure for the workflow as applied to the NSR-Nisin model with serine is described. The steps for the workflow as applied to the NSR-Nisin model with proline are identical. Here the Amber 16 suite of programs was used [5]. To start the pdb files from the docking procedure step were prepared for use with Amber’s LEaP program [6]. This required running the following Linux command.
+In what follows the procedure for the workflow as applied to the NSR-Nisin model with serine is described. The steps for the workflow as applied to the NSR-Nisin model with proline are identical. Here the Amber 16 suite of programs was used [5]. To start the pdb files from the docking procedure step were prepared for use with Amber’s LEaP program [6]. This required running the following BASH commands.
 
 ```bash
 
@@ -70,7 +70,7 @@ $ prepgen -i dha.ac -o dha.prepin -m dha.mc -rn DHA
 $ parmchk2 -i dha.prepin -f prepi -o dha.frcmod -a Y -p parm10.dat
 ```
 
-The amber program antechamber can read the ```bash .cif``` files of the nonstandard residues and assign partial charges and atom types to the the nonstandard residues based on the bcc charge scheme[8]. This will output ``` .ac``` files which have charge and bonding information for the nonstandard residues. These will then used as input to the prepgen program along with a custom made ``` mc``` file that tells the prepgen program what atoms to ignore from the residue (for peptide bonding). The ``` mc``` file should look like so
+The amber program antechamber can read the ```.cif``` files of the nonstandard residues and assign partial charges and atom types to the the nonstandard residues based on the bcc charge scheme [8]. This will output ``` .ac``` files which have charge and bonding information for the nonstandard residues. These will then be used as input to the ```prepgen``` program along with a custom made ``` mc``` file that tells the ```prepgen``` program what atoms to ignore from the residue (for peptide bonding). The ``` mc``` file should look like so
 
 ```bash
 HEAD_NAME N 
@@ -83,7 +83,7 @@ POST_TAIL_TYPE N
 CHARGE 0.0
 ```
 
-The HEAD NAME and TAIL NAME lines identify the atoms that will connect to the previous and following amino acids, respectively. The MAIN CHAIN lines list the atoms along the chain that connect the head and the tail atoms. The OMIT NAME lines list the atoms in the nonstandard residue that should be removed from the final structure, as they are not present in the intact protein. The PRE HEAD TYPE and POST TAIL TYPE lines let prepgen know what atom types in the surrounding protein will be used for the covalent connection. The CHARGE line gives the total charge on the residue; prepgen will ensure that the charges of the ”omitted” atoms are redistributed among the remaining atoms so that the total charge is correct (i.e., 0 in this case).The prepgen program then outputs ```.prepin``` files which are the inputed into the parmchk2 program that create the ```.frcmod``` files using paramters from the gaff.dat and parm10.dat parameter files. Next the ```.prepin``` and ```.frcmod``` files were read into the LEaP program
+The HEAD_NAME and TAIL_NAME lines identify the atoms that will connect to the previous and following amino acids, respectively. The MAIN_CHAIN lines list the atoms along the chain that connect the head and the tail atoms. The OMIT_NAME lines list the atoms in the nonstandard residue that should be removed from the final structure, as they are not present in the intact protein. The PRE_HEAD_TYPE and POST_TAIL_TYPE lines let ```prepgen``` know what atom types in the surrounding protein will be used for the covalent connection. The CHARGE line gives the total charge on the residue; prepgen will ensure that the charges of the ”omitted” atoms are redistributed among the remaining atoms so that the total charge is correct (i.e, 0 in this case).The prepgen program then outputs ```.prepin``` files which are then inputed into the ```parmchk2``` program that create the ```.frcmod``` files using paramters from the ```gaff.dat``` and ```parm10.dat``` parameter files. Next the ```.prepin``` and ```.frcmod``` files were read into the LEaP program.
 
 ```bash
 
@@ -105,7 +105,7 @@ Welcome to LEaP!
 > saveamberparm x gfp.prmtop gfp.inpcrd  # creates topology and coordinate files
 ```
 
-At this point however LEaP began to complain about missing parameters for bond lengths, bond angles and dihedral angles. The different values for these parameters (they are different fior each atom) are used with the amber force field to determine the energies for the NSR-Nisin complex[9].  These values are the values for parameters kb, r0, kθ, θ0, γ, Vn, Aij, Bij which are specified in the ```.frcmod``` and ```.dat``` files. So to overcome the ”missing parameter” issue values from the ```gaff2.dat``` file were used as the values for the missing parameter indicated by LEaP. The underlying cause of the ”missing parameter” issue was LEaP’s inability to recognise the 3 peptide bonds and associated angles and dihedral angles of LYS-DBB, ALA-DBB, and VAL-DHA. Thus the ```extra.frcmod``` file was created to supply these missing values to LEaP. 
+At this point however LEaP began to complain about missing parameters for bond lengths, bond angles and dihedral angles. The different values for these parameters (they are different for each atom) are used with the amber force field to determine the energies for the NSR-Nisin complex [9].  These values are the values for parameters kb, r0, kθ, θ0, γ, Vn, Aij, Bij which are specified in the ```.frcmod``` and ```.dat``` files. So to overcome the ”missing parameter” issue, values from the ```gaff2.dat``` file were used as the values for the missing parameters indicated by LEaP. The underlying cause of the ”missing parameter” issue was LEaP’s inability to recognise the 3 peptide bonds and associated angles and dihedral angles of LYS-DBB, ALA-DBB, and VAL-DHA. Thus the ```extra.frcmod``` file was created to supply these missing values to LEaP. 
 
 ```bash
 
@@ -151,7 +151,7 @@ IMPROPER
 NONBON
 ```
 
-There was one other small issue which seems to be a bug with the LEaP program. In some instances after the extra.frcmod was read into leap and the command run for creating the topology and coordinate files LEaP would still not recognise the parameters for 1 or 2 dihedral angles
+There was one other small issue which seems to be a bug with the LEaP program. In some instances after the extra.frcmod was read into LEaP and the command run for creating the topology and coordinate files, LEaP would still not recognise the parameters for 1 or 2 dihedral angles
 
 ```bash
 
@@ -290,7 +290,7 @@ Then to carry out the rest of the LEaP procedure for the NSR enzyme, solvating n
 > save COMNEUT com.neutral0.prmtop com.neutral0.prmcrd
 > saveamberparm COMNEUT com.neutral0.prmtop com.neutral0.prmcrd
 ```
-These commands produced many files that needed to be used with ```sander```, ```cpptraj``` and ```MMPBSA.py```. Next the sander program was used to carry out the molecular simulation. To use this program an input file needed to be created that would inform the program of the physical processes to simu- late. Noting the good results of a previous study ?, the same parameters were employed. Firstly the system was minimisied in a two stage process. The input file for the first minimisation stage looks like this.
+These commands produced many files that needed to be used with ```sander```, ```cpptraj``` and ```MMPBSA.py```. Next the sander program was used to carry out the molecular simulation. To use this program an input file needed to be created that would inform the program of the physical processes to simulate. Noting the good results of a previous study [Khosa], the same parameters for the minimisation, heating and  equlibration stages were employed. Firstly the system was minimisied in a two stage process. The input file for the first minimisation stage looks like this.
 
 ```bash
 min.in: 
@@ -300,23 +300,23 @@ ntp = 0, ntwx = 10000, ntwe = 0, ntpr = 10000, cut = 8.0,
 ntr = 1, restraintmask = ':1-287 & !@H=', restraint_wt = 25.0, /
 ```
 
-This means that harmonic restraints with a force constant of 25 kcal/mol/Angstrom^2 were applied to all protein atoms while all other atoms were free to move during 50 cycles of steepest descent (SD) and 200 cycles of conjugate gradient (CG) minimization. In the second stage (using a separate input file with adjusted parameters, min2.in), the force constant of the harmonic restraints was reduced to 5 kcal/mol/Anstrom^2, and 50 cycles of SD and 200 cycles of CG minimization were performed.
+This means that harmonic restraints with a force constant of 25 kcal/mol/Angstrom^2 were applied to all protein atoms while all other atoms were free to move during 50 cycles of steepest descent (SD) and 200 cycles of conjugate gradient (CG) minimization. In the second stage (using a separate input file with adjusted parameters, ```min2.in```), the force constant of the harmonic restraints was reduced to 5 kcal/mol/Anstrom^2, and 50 cycles of SD and 200 cycles of CG minimization were performed.
 
 ```bash
 sander -O -i min.in -o min.out -p com.wat.neutral2.prmtop -c com.wat.neutral2.prmcrd /
--r 01\_Min.rst -inf 01\_Min.mdinfo -ref com.wat.neutral2.prmcrd
+-r 01_Min.rst -inf 01_Min.mdinfo -ref com.wat.neutral2.prmcrd
 ```
 
-The sander program takes the input file min.in with the instructions on how to minimise, the topology file ```com.wat.neutral2.prmtop``` also as input, the coordinate file ```com.wat.neutral2.prmcrd``` again as input and the cooridinate file to act as reference for the restraint intsructions. It outputs the ```min.out``` file contain information on each time step of the minisation phase and a restart file ```01_Min.rst``` so the command for the second stage knows the coordinates to start from.
+The sander program takes the input ```file min.in``` with the instructions on how to minimise, the topology file ```com.wat.neutral2.prmtop``` also as input, the coordinate file ```com.wat.neutral2.prmcrd``` again as input and the cooridinate file to act as reference for the restraint intsructions. It outputs the ```min.out``` file containing information on each time step of the minisation phase and a restart file ```01_Min.rst``` so the command for the second stage knows the coordinates to start from.
 
 ```bash
 sander -O -i min.in -o min.out -p com.wat.neutral2.prmtop -c com.wat.neutral2.prmcrd /
--r 01\_Min.rst -inf 01\_Min.mdinfo -ref com.wat.neutral2.prmcrd
+-r 01_Min.rst -inf 01_Min.mdinfo -ref com.wat.neutral2.prmcrd
 
 sander -O -i min2.in -o min2.out -p com.wat.neutral2.prmtop -c 01\_Min.rst /
--r 01\_Min2.rst -inf 01\_Min.mdinfo -ref 01\_Min.rst
+-r 01_Min2.rst -inf 01_Min.mdinfo -ref 01_Min.rst
 ```
-Next the system is heated up for a period of 50 picoseconds from 100K ro 300K with volume held constant. This is the input file for the heating stage.
+Next the system is heated up for a period of 50 picoseconds from 100K to 300K with volume held constant. This is the input file for the heating stage.
 
 ```bash
 heat.in:
@@ -352,7 +352,7 @@ The commands to run these processes look like so. Note also the ```.mdcrd files`
 
 ```bash
 $ sander -O -i heat.in -o heat.out -p com.wat.neutral2.prmtop -c 01\_Min2.rst /
--r heat.rst -ref 01\_Min2.rst -x heat.mdcrd
+-r heat.rst -ref 01\_Min2.rst -x heat1.mdcrd
 $ sander -O -i equib.in -o equib.out -p com.wat.neutral2.prmtop -c heat.rst /
 -r equib.rst -ref heat.rst -x equib.mdcrd
 $ sander -O -i equib2.in -o equib2.out -p com.wat.neutral2.prmtop -c equib.rst /
@@ -376,7 +376,7 @@ $ mpirun -np 4 $AMBERHOME/bin/sander.MPI -O -i prodser1ns1.in -p com.wat.neutral
 -c prod40.rst -r prod41.rst -o prod41.out -x prod41.mdcrd    
 ```
 
-For practical purposes the production run was split up into many stages (so as to able recover completed trajectory files in the event of a crash and also to not "hog the server"). So the previous line of code shows very near to the end of all the timesteps (from 33 to 34 nanoseconds).  Througout the full MD simulation long-range electrostatic interactions were treated using the particle mesh Ewald method[ref]. A distance cut off of 8 Angstroms was used to define short range electrostatic interactions. All bonds involving hydrogen were constrained by using the SHAKE algorithim [ref] which also required setting the timestep to be 2 femtoseconds. Trajectory files were created every picosecond. 
+For practical purposes the production run was split up into many stages (so as to able recover completed trajectory files in the event of a crash and also to not "hog the server"). So the previous line of code shows very near to the end of all the timesteps (from 33 to 34 nanoseconds).  Througout the full MD simulation long-range electrostatic interactions were treated using the particle mesh Ewald method [ref]. A distance cut off of 8 Angstroms was used to define short range electrostatic interactions. All bonds involving hydrogen were constrained by using the SHAKE algorithim [ref] which also required setting the timestep to be 2 femtoseconds. Trajectory files were created every picosecond. 
 
 ## Trajectory Analysis
 
