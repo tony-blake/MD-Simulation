@@ -1,8 +1,8 @@
-
-
-
-
-
+library(xlsx)
+library(ggplot2)
+library(plyr)
+library(reshape)
+library(dplyr)
 
 #Input raw data and create dataframes
 hbondtable51proval <- read.delim("All.UU.avg.all10proval.dat", sep="", stringsAsFactors=FALSE)
