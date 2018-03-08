@@ -522,4 +522,147 @@ Per-residue GB and PB decomposition
 /
 ```
 
-One final point to note. For the binding enbergy calculations the MM-GBSA (Generalised Born) method was used and not the MM-PBSA (Poisson-Boltzmann) method. The ```FINAL_DECOMP_MMPBSA.dat``` file has all the values of the binding energies for the residues specified in the input file and can then plotted using the ggplot2 in R \cite{gentleman, hadley}. 
+One final point point to note. For the binding enbergy calculations the MM-GBSA (Generalised Born) method was used and not the MM-PBSA (Poisson-Boltzmann) method. The ```FINAL_DECOMP_MMPBSA.dat``` file has all the values of the binding energies for the residues specified in the input file and can then plotted using the ggplot2 in R \cite{gentleman, hadley}. 
+
+The program to extract the RMSD and RMSF information form the trajectory files is a;most the same as that used for the distance information extraction. 
+
+
+
+
+```bash
+$ cpptraj -p com.wat.neutral2.prmtop -i trajfiles.rmstime50.ptraj
+
+# input file trajfiles.rmstime50.ptraj
+trajin heat.mdcrd
+trajin equib1.mdcrd
+trajin equib2.mdcrd
+trajin equib3.mdcrd
+trajin equib4.mdcrd
+trajin equib5.mdcrd
+trajin equib6.mdcrd
+trajin equib7.mdcrd
+trajin test2.mdcrd
+trajin prod2.mdcrd
+trajin prod3.mdcrd
+trajin prod4.mdcrd
+trajin prod5.mdcrd
+trajin prod6.mdcrd
+trajin prod7.mdcrd
+trajin prod8.mdcrd
+trajin prod9.mdcrd
+trajin prod10.mdcrd
+trajin prod11.mdcrd
+trajin prod12.mdcrd
+trajin prod13.mdcrd
+trajin prod14.mdcrd
+trajin prod15.mdcrd
+trajin prod16.mdcrd
+trajin prod17.mdcrd
+trajin prod18.mdcrd
+trajin prod19.mdcrd
+trajin prod20.mdcrd
+trajin prod21.mdcrd
+trajin prod22.mdcrd
+trajin prod23.mdcrd
+trajin prod24.mdcrd
+trajin prod25.mdcrd
+trajin prod26.mdcrd
+trajin prod27.mdcrd
+trajin prod28.mdcrd
+trajin prod29.mdcrd
+trajin prod30.mdcrd
+trajin prod31.mdcrd
+trajin prod32.mdcrd
+trajin prod33.mdcrd
+trajin prod34.mdcrd
+trajin prod35.mdcrd
+trajin prod36.mdcrd
+trajin prod37.mdcrd
+trajin prod38.mdcrd
+trajin prod39.mdcrd
+trajin prod40.mdcrd
+trajin prod41.mdcrd
+trajin prod42.mdcrd
+trajin prod43.mdcrd
+trajin prod44.mdcrd
+trajin prod45.mdcrd
+trajin prod46.mdcrd
+trajin prod47.mdcrd
+trajin prod48.mdcrd
+trajin prod49.mdcrd
+
+rms ToFirst :288-300&!@H= first out rmsdnisinovertime mass
+
+run
+```
+
+And for the RMSD calculation
+
+
+```bash
+
+$ cpptraj -p com.wat.neutral2.prmtop -i trajfiles.rmsd50.ptraj
+
+# input file trajfiles.rmsd50.ptraj
+trajin heat.mdcrd
+trajin equib1.mdcrd
+trajin equib2.mdcrd
+trajin equib3.mdcrd
+trajin equib4.mdcrd
+trajin equib5.mdcrd
+trajin equib6.mdcrd
+trajin equib7.mdcrd
+trajin test2.mdcrd
+trajin prod2.mdcrd
+trajin prod3.mdcrd
+trajin prod4.mdcrd
+trajin prod5.mdcrd
+trajin prod6.mdcrd
+trajin prod7.mdcrd
+trajin prod8.mdcrd
+trajin prod9.mdcrd
+trajin prod10.mdcrd
+trajin prod11.mdcrd
+trajin prod12.mdcrd
+trajin prod13.mdcrd
+trajin prod14.mdcrd
+trajin prod15.mdcrd
+trajin prod16.mdcrd
+trajin prod17.mdcrd
+trajin prod18.mdcrd
+trajin prod19.mdcrd
+trajin prod20.mdcrd
+trajin prod21.mdcrd
+trajin prod22.mdcrd
+trajin prod23.mdcrd
+trajin prod24.mdcrd
+trajin prod25.mdcrd
+trajin prod26.mdcrd
+trajin prod27.mdcrd
+trajin prod28.mdcrd
+trajin prod29.mdcrd
+trajin prod30.mdcrd
+trajin prod31.mdcrd
+trajin prod32.mdcrd
+trajin prod33.mdcrd
+trajin prod34.mdcrd
+trajin prod35.mdcrd
+trajin prod36.mdcrd
+trajin prod37.mdcrd
+trajin prod38.mdcrd
+trajin prod39.mdcrd
+trajin prod40.mdcrd
+trajin prod41.mdcrd
+trajin prod42.mdcrd
+trajin prod43.mdcrd
+trajin prod44.mdcrd
+trajin prod45.mdcrd
+trajin prod46.mdcrd
+trajin prod47.mdcrd
+trajin prod48.mdcrd
+trajin prod49.mdcrd
+
+rmsd nisincoreBBcheck :288-300@C,CA,N perres perresout rms_vs_time.BB.50.dat perresavg perresavg.BB.50.dat
+
+run
+```
