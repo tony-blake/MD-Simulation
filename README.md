@@ -385,7 +385,7 @@ To analyse the MD trajectory the programs ```cpptraj``` and  ```MMPBSA.py``` wer
 ```bash
 $ cpptraj -p com.wat.neutral2.prmtop -i trajfiles.atom.ptraj
 
-# input file trajfiles.atom.ptraj
+# Contents of input file trajfiles.atom.ptraj
 trajin heat.mdcrd
 trajin equib1.mdcrd
 trajin equib2.mdcrd
@@ -442,7 +442,7 @@ After the trajectory analysis has finished the output file SER236OtoCYS28C conta
 ```bash
 $ cpptraj -p com.wat.neutral2.prmtop -i hbondtraj.ptraj
 
-# input file hbondtraj.ptraj
+# Contents of input file hbondtraj.ptraj
 trajin heat.mdcrd
 trajin equib1.mdcrd
 trajin equib2.mdcrd
@@ -524,7 +524,7 @@ Per-residue GB and PB decomposition
 
 One final point point to note. For the binding enbergy calculations the MM-GBSA (Generalised Born) method was used and not the MM-PBSA (Poisson-Boltzmann) method. The ```FINAL_DECOMP_MMPBSA.dat``` file has all the values of the binding energies for the residues specified in the input file and can then plotted using the ggplot2 in R \cite{gentleman, hadley}. 
 
-The program to extract the RMSD and RMSF information form the trajectory files is a;most the same as that used for the distance information extraction. 
+Lastly, the program to extract the RMSD and RMSF information from the trajectory files is almost the same as that used for the distance information extraction. 
 
 
 
@@ -532,7 +532,7 @@ The program to extract the RMSD and RMSF information form the trajectory files i
 ```bash
 $ cpptraj -p com.wat.neutral2.prmtop -i trajfiles.rmstime50.ptraj
 
-# input file trajfiles.rmstime50.ptraj
+# Contents of input file trajfiles.rmstime50.ptraj
 trajin heat.mdcrd
 trajin equib1.mdcrd
 trajin equib2.mdcrd
@@ -595,8 +595,7 @@ rms ToFirst :288-300&!@H= first out rmsdnisinovertime mass
 
 run
 ```
-
-And for the RMSD calculation
+After running the above commands ```trajfiles.rmstime50.ptraj``` several files are created. The file ```rmsdnisinovertime``` shows the values of the atomic positional fluctuations (RMSF) calculated for all atoms in the mask of residues 22 to 34 Nisin at every picosecond. And similarly for the RMSD calculation.
 
 
 ```bash
@@ -666,3 +665,9 @@ rmsd nisincoreBBcheck :288-300@C,CA,N perres perresout rms_vs_time.BB.50.dat per
 
 run
 ```
+
+After running the same commands for ```trajfiles.rmsd50.ptraj``` two files are created. One for the RMSD over time (```rms_vs_time.BB.50.dat```) and one for the average-over-time RMSD per residue  (```perresavg.BB.50.dat```). For the purposes of plotting in R a bar chart was made using the data in the ```perresavg.BB.50.dat``` file.
+
+
+References
+==========
