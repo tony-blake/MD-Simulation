@@ -671,3 +671,21 @@ After running the same commands for ```trajfiles.rmsd50.ptraj``` two files are c
 
 References
 ==========
+
+1. Grant, B. J., Rodrigues, A. P. C., ElSawy, K. M., McCammon, J. A. & Caves, L. S. D. Bio3d: an r package for the comparative analysis of protein structures. Bioinformat- ics 22, 2695 (2006). URL + http://dx.doi.org/10.1093/bioinformatics/btl461.
+2. Khosa, S. et al. Structural basis of lantibiotic recognition by the nisin resistance protein from streptococcus agalactiae. Sci. Rep. 6, 18679 ((2016)). 
+3. Hsu, S. et al. The nisin-lipid ii complex reveals a pyrophosphate cage that provides a blueprint for novel antibiotics. Nat Struct Mol Biol 11, 963 (2004). 
+4. van Nuland, N. A. J. et al. Autodock4 and autodocktools4: Automated docking with selective receptor flexibility. J Comput Chem 30, 2785–2791 (2009). 
+5. Case, D. et al. Amber16. University of California, San Francisco . 
+6. Zhang, T., W.and Hou, Schafmeister, C., Ross, W. & Case, D. Leap. University of California, 
+San Francisco (1995). 
+7. Word et al. Leap. J. Mol. Biol. 285, 1735–1747 (1999). 
+8. Jakalian,A.,Jack,D.B.&Bayly,C.I.Fast,efficientgenerationofhigh-qualityatomiccharges. am1-bcc model: Ii. parameterization and validation. Journal of Computational Chemistry 23, 1623–1641 (2002). URL http://dx.doi.org/10.1002/jcc.10128. 
+
+9.  Darden, T., York, D. & Pedersen, L. Particle mesh Ewald: An N⋅ log (N) method for Ewald sums in large systems. J. Chem. Phys. 98, 10089-10092 (1993). 
+10. York, D.M., Darden, T.A. & Pedersen, L.G. The effect of long-range electrostatic interactions in simulations of macromolecular crystals - a comparison of the ewald and truncated list methods. J. Chem. Phys. 99, 8345-8348 (1993). 
+11. Ryckaert, J.P., Ciccotti, G. & Berendsen, H.J.C. Numerical integration of cartesian equations of motion of a system with constraints molecular dynamics of n-alkanes. J. Comput. Phys. 23, 327-341 (1977). 
+12. R Core Team. R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org. 
+13. Wickham,H.ggplot2:Elegant Graphics for Data Analysis (Springer-VerlagNewYork,2009). URL http://ggplot2.org. 
+14. Roland L Dunbrack Jr.  Institute for Cancer Research, Fox Chase Cancer Center, 7701 Burholme Avenue, Philadelphia PA 19111, USA Rotamer Libraries in the 21st Century Volume 12, Issue 4, 1 August 2002, Pages 431–440
+15. UCSF Chimera--a visualization system for exploratory research and analysis. Pettersen EF, Goddard TD, Huang CC, Couch GS, Greenblatt DM, Meng EC, Ferrin TE. J Comput Chem. 2004 Oct;25(13):1605-12.
