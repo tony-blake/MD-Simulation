@@ -22,7 +22,7 @@ In this directory are the R files for taking the raw data generated from Amber d
 
 ```rmsdnisinovertime``` - This is the raw data generated from the ```trajfiles.rmstime50.ptraj``` file. It shows values for the RMSD at each time point for Nisin A.
 
-```rmsdpvovertime``` - This is the raw data generated from the ```trajfiles.rmsdpv.ptraj``` file. The orgiginal output file was ```rms_vs_time.BB.50proval.dat```. To be inputed inot R the file had to be converted to another format and renamed ```rmsdpvovertime```. It shows values for the RMSD at each time point for Nisin PV.` 
+```rmsdpvovertime``` - This is the raw data generated from the ```trajfiles.rmsdpvovertime.ptraj``` file. It shows values for the RMSD at each time point for Nisin PV.
 
 
 
