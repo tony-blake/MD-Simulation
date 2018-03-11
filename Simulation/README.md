@@ -17,5 +17,26 @@ This folder contains the files that are used at the start of the MD Simulation. 
 
 ```prodser1ns1.in``` - This is the input file for use with ```sander``` containing the parameters for a production stage of 1 nanosecond
 
+```hbondtraj.ptraj``` - This is cpptraj file used to generate the raw data for the hbond analysis.  
+
+```trajfiles.atom2.ptraj``` - This is the cpptraj file used to generate the raw data file ```SER236OtoCYS28Cnyl50``` for the distance analysis in Nisin A.
+
+```trajfiles.proval.ptraj``` - This the is the cpptraj file used to generate the raw data file ```SER236OtoCYS28Cnylproval50``` for the distance analysis in Nisin PV.
+
+```trajfiles.rmstime50.ptraj``` - This the is the cpptraj file used to generate the raw data file ```rmsdnisinovertime``` for the RMSD analysis in Nisin A.  
+
+```trajfiles.rmsdpvovertime.ptraj``` - This the is the cpptraj file used to generate the raw data file ```rmsdpvovertime``` for the RMSD analysis in Nisin PV.  
+
+```trajfiles.rmsd50.ptraj``` - This the is the cpptraj file used to generate the raw data file ```perresavg.BB.50.dat``` for the RMSF analysis in Nisin A.
+
+```trajfiles.rmsdpv.ptraj``` - This the is the cpptraj file used to generate the raw data file ```perresavg.BB.50proval.dat``` for the RMSF analysis in Nisin PV.   
+
+
+
+
+
+
+
+
 
  
