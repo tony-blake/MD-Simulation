@@ -10,9 +10,9 @@ In this directory are the R files for taking the raw data generated from Amber d
 ```FINAL_DECOMP_MMPBSA50PROVAL.xls``` - Excel file showing the binding energies for Nisin-PV calculated from the ```MMPBSA.py``` program.  
 ```FINAL_DECOMP_MMPBSAser50.xlsx``` - Excel file showing the binding energies for Nisin-PV calculated from the ```MMPBSA.py``` program.  
 
-```SER236OtoCYS28Cnyl50``` - Raw data file generated from the ```trajfiles.atom.ptraj```. It shows the value of the distance from the between the cleavage point nitrogen in Residue 28 in Nisin A and the Sidechain O in SER236 in NSR over 50 nanoeconds.  
+```SER236OtoCYS28Cnyl50``` - Raw data file generated from the ```trajfiles.atom2.ptraj```. It shows the value of the distance from the between the cleavage point nitrogen in Residue 28 in Nisin A and the Sidechain O in SER236 in NSR over 50 nanoeconds.  
 
-```SER236OtoCYS28Cnylproval50``` - Raw data file generated from the ```trajfiles.atom2.ptraj```. It shows the value of the distance from the between the cleavage point nitrogen in Residue 28 in Nisin PV and the Sidechain O in SER236 in NSR over 50 nanoeconds.  
+```SER236OtoCYS28Cnylproval50``` - Raw data file generated from the ```trajfiles.proval.ptraj```. It shows the value of the distance from the between the cleavage point nitrogen in Residue 28 in Nisin PV and the Sidechain O in SER236 in NSR over 50 nanoeconds.  
 
 ```distance.R``` - This is the R code to create the plot showing  value of the distance from the between the cleavage point nitrogen in Residue 28 in Nisin A and Nisin PV and the Sidechain O in SER236 in NSR over 50 nanoeconds.  
 
@@ -22,7 +22,11 @@ In this directory are the R files for taking the raw data generated from Amber d
 
 ```rmsdnisinovertime``` - This is the raw data generated from the ```trajfiles.rmstime50.ptraj``` file. It shows values for the RMSD at each time point for Nisin A.
 
-```rmsdpvovertime``` - This is the raw data generated from the ```trajfiles.rmsdpvovertime.ptraj``` file. It shows values for the RMSD at each time point for Nisin PV.
+```rmsdpvovertime``` - This is the raw data generated from the ```trajfiles.rmsdpvovertime.ptraj``` file. It shows values for the RMSD at each time point for Nisin PV.  
+
+```perresavg.BB.50.dat``` - This is the raw data file generated from the ```trajfiles.rmsd50.ptraj``` file. It shows barplots of the RMSF value averged over the 50 nanosecond duration of the MD simulation for each of the Nisin A residues.
+
+```perresavg.BB.50proval.dat``` - This is the raw data file generated from the ```trajfiles.rmsdpv.ptraj``` file. It shows barplots of the RMSF value averaged over the 50 nanosecond duration of the MD simulation for each of the Nisin A residues.
 
 
 
