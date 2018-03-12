@@ -9,4 +9,4 @@ Description of Directory Contents
 
 ```config.txt``` - This file contains the parameters required by Autodock during the docking procedure for nisin into NSR.
 
-``nisnPROVAL.pdb``` - This is pdb file created from mutating the ```1wco_N.pdn``` file in the Chimera software so that the SER residue and the isoleucine residue change to the proline and valine residues respectively.  
+```nisnPROVAL.pdb``` - This is pdb file created from mutating the ```1wco_N.pdn``` file in the Chimera software so that the SER residue and the isoleucine residue change to the proline and valine residues respectively.  
