@@ -1,4 +1,4 @@
-Description of Directory Contents
+Description of Repository Contents
 =================================
 
 ```README.md```  Detailed step by step instructions and account of the workflow used to carry out the Molecular Modelling of the Nisin NSR interaction.
