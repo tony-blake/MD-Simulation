@@ -1,0 +1,22 @@
+trajin heatproval.mdcrd
+trajin equib.mdcrd
+trajin equib2.mdcrd
+trajin equib3.mdcrd
+trajin equib4.mdcrd
+trajin equib5.mdcrd
+trajin equib6.mdcrd
+trajin equib7.mdcrd
+trajin prodproval1.mdcrd
+trajin prodproval2.mdcrd
+trajin prodproval3.mdcrd
+trajin prodproval4.mdcrd
+trajin prodproval5.mdcrd
+trajin prodproval6.mdcrd
+trajin prodproval7.mdcrd
+trajin prodproval8.mdcrd
+trajin prodproval9.mdcrd
+trajin prodproval10.mdcrd
+
+rmsd nisincoreBBproval :288-300@C,CA,N perres perresout rms_vs_time.BB.50proval.dat perresavg perresavg.BB.50proval.dat
+
+run
