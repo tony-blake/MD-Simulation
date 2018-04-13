@@ -1,11 +1,11 @@
 Description of Repository Contents
 =================================
 
-```README.md```  Detailed step by step instructions and account of the workflow used to carry out the Molecular Modelling of the Nisin NSR interaction.
+```README.md```  Detailed step by step instructions and account of the workflow used to carry out the Molecular Modelling of the Nisin-NSR interaction.
 
 ```Docking``` This directory contains the scripts and pdb files necessary to create the input files and starting configurations for Nisin and NSR before the simulation is initialised.
 
-``` Simulation``` This directory contains the paramter input files for the amber16 programs. It also contains the starting configuration pdb files for the LEaP program. In addition it has ptraj files which are simple scripts that are used once the simulation has completed to extract distance, RMSD, RMSF and hbond information from the trajectory files (files ending in ```*.mdcrd```)
+``` Simulation``` This directory contains the parameter input files for the Amber16 programs. It also contains the starting configuration pdb files for the LEaP program. In addition it has ```ptraj``` files which are simple scripts that are used once the simulation has completed to extract distance, RMSD, RMSF and hydrogen bond information from the trajectory files (files ending in ```*.mdcrd```)
 
 ``` Rcode``` This directory contains the R scripts used to produce the plots for figure X. It also contains the input files for each of the scripts. 
 
