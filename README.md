@@ -1,7 +1,7 @@
 MD-Simulation
 =============
 
-This repository holds the codebases for the peptide-protein docking procedure ("Docking" folder) and the codebase for using the Amber suite of programs ("Simulation" folder) to run a 50 nansecond Molecular Dynamic Simulation. Also here we describe in full the various steps that are required to set up and perform the simulation correctly.  
+This repository holds the codebases for the peptide-protein docking procedure ("Docking" folder) and the codebase for using the Amber suite of programs ("Simulation" folder) to run a 50 nanosecond Molecular Dynamic Simulation. Also here we describe in full the various steps that are required to set up and perform the simulation correctly.  
 
 The molecular modeling simulations consisted of 2 models. The first model used a configuration of residues 22-34 of a nisin mutant where residue 29 is serine and is structurally aligned so that residues 22-34 fit into the tunnel region of the NSR molecule. The second model was also aligned to fit into the tunnel region of the NSR enzyme only this time residue 29 has been mutated to proline.
 
@@ -22,7 +22,7 @@ To create a pdb file for the NSR-Nisin complex, individual files for both NSR an
 For the NSR molecule the pdb file ```4Y68``` was used and for the nisin molecule the ```1wco``` pdb file was used where Protein Databank Accession numbers for both files came from their respective papers [2,3]
 
 ## Docking Procedure
-To determine a starting configuration for the NSR-Nisin complex a docking program Autodock for ligand and protein binding was used [4]. This produced 9 possible binding conformations for the NSR-Nisin complex. Out of these 9 states the 7th conformation state was chosen being the state which showed the most favorable interaction between residues 29 of nisin and residues 236-240 of the active site in NSR. In this model the NSR-Nisin complex had serine for residue 29. The molecular visualisation package Chimera was then used to mutate residue 29 to proline and residue 30 to valine and the subsequent configuration saved as a different pdb file. Again the docking program Autodock was used to create a starting configuration for the NSR-Nisin complex. In this case the 1st conformation was chosen for the same reasons as previously. Then both chosen conformation states (one with serine, the other with proline) were saved as separate pdb files to be used as starting configurations in the molcular modeling simulation.
+To determine a starting configuration for the NSR-Nisin complex a docking program Autodock for ligand and protein binding was used [4]. This produced 9 possible binding conformations for the NSR-Nisin complex. Out of these 9 states the 7th conformation state was chosen being the state which showed the most favorable interaction between residues 29 of nisin and residues 236-240 of the active site in NSR. In this model the NSR-Nisin complex had serine for residue 29. The molecular visualisation package Chimera was then used to mutate residue 29 to proline and residue 30 to valine and the subsequent configuration saved as a different pdb file. Again the docking program Autodock was used to create a starting configuration for the NSR-Nisin complex. In this case the 1st conformation was chosen for the same reasons as previously. Then both chosen conformation states (one with serine, the other with proline) were saved as separate pdb files to be used as starting configurations in the molecular modeling simulation.
 
 
 ## Molecular Modelling 
@@ -33,11 +33,11 @@ To run the MD simulation the Amber workflow was used [5]. This consisted of the 
 
 - Prepare ```cif``` files for nonstandrad residues DBB and DHA.
 
-- Use antechamber forcefield values to fill in for missing parameters.
+- Use ```antechamber``` forcefield values to fill in for missing parameters.
 
-- Use antechamber to create ```prmtop``` and ```inpcrd``` files for each pdb file.
+- Use ```antechamber``` to create ```prmtop``` and ```inpcrd``` files for each pdb file.
 
-- Used sander to run MD simulation from ```prmtop``` and ```inpcrd``` files.
+- Use ```sander``` to run MD simulation from ```prmtop``` and ```inpcrd``` files.
 
 - Use ```cpptraj``` to analyse MD trajectory files for change of distances over time.
 
@@ -56,7 +56,7 @@ $ reduce -Trim recptor.pdb > recptorNoH.pdb
 
 ```
 
-Here ```Nisinmol7.pdb``` was the fie created by Autodock for the 7th binding conformation state and ```gfp.pdb``` the output file from the pdb4amber program. And ```4Y68_A.pdb``` was the pdb file for chain A in the NSR protein. The ```pdb4amber``` program changed the residues labled HIS to HIE and indicated that the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) were not recognised by LEaP. Also the ```reduce``` program with the ```-Trim``` flag strips all hydrogens from the pdb file [7]
+Here ```Nisinmol7.pdb``` was the file created by Autodock for the 7th binding conformation state and ```gfp.pdb``` the output file from the ```pdb4amber``` program. And ```4Y68_A.pdb``` was the pdb file for chain A in the NSR protein. The ```pdb4amber``` program changed the residues labeled HIS to HIE and indicated that the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) were not recognised by LEaP. Also the ```reduce``` program with the ```-Trim``` flag strips all hydrogens from the pdb file [7]
 
 To deal with the nonstandard residues dehydroalanine (DHA) and d-alpha-aminobutyric acid (DBB) the respective entries in the RCSB Protein Data Bank were accessed and the respective ```.cif``` files downloaded. The following BASH code was then run using several programs from Amber.
 
@@ -70,7 +70,7 @@ $ prepgen -i dha.ac -o dha.prepin -m dha.mc -rn DHA
 $ parmchk2 -i dha.prepin -f prepi -o dha.frcmod -a Y -p parm10.dat
 ```
 
-The amber program antechamber can read the ```.cif``` files of the nonstandard residues and assign partial charges and atom types to the the nonstandard residues based on the bcc charge scheme [8]. This will output ``` .ac``` files which have charge and bonding information for the nonstandard residues. These will then be used as input to the ```prepgen``` program along with a custom made ``` mc``` file that tells the ```prepgen``` program what atoms to ignore from the residue (for peptide bonding). The ``` mc``` file should look like so
+The amber program ```antechamber``` can read the ```.cif``` files of the nonstandard residues and assign partial charges and atom types to the the nonstandard residues based on the bcc charge scheme [8]. This will output ``` .ac``` files which have charge and bonding information for the nonstandard residues. These will then be used as input to the ```prepgen``` program along with a custom made ``` mc``` file that tells the ```prepgen``` program what atoms to ignore from the residue (for peptide bonding). The ``` mc``` file should look like so
 
 ```bash
 HEAD_NAME N 
@@ -83,7 +83,7 @@ POST_TAIL_TYPE N
 CHARGE 0.0
 ```
 
-The HEAD_NAME and TAIL_NAME lines identify the atoms that will connect to the previous and following amino acids, respectively. The MAIN_CHAIN lines list the atoms along the chain that connect the head and the tail atoms. The OMIT_NAME lines list the atoms in the nonstandard residue that should be removed from the final structure, as they are not present in the intact protein. The PRE_HEAD_TYPE and POST_TAIL_TYPE lines let ```prepgen``` know what atom types in the surrounding protein will be used for the covalent connection. The CHARGE line gives the total charge on the residue; prepgen will ensure that the charges of the ”omitted” atoms are redistributed among the remaining atoms so that the total charge is correct (i.e, 0 in this case).The prepgen program then outputs ```.prepin``` files which are then inputed into the ```parmchk2``` program that create the ```.frcmod``` files using paramters from the ```gaff.dat``` and ```parm10.dat``` parameter files. Next the ```.prepin``` and ```.frcmod``` files were read into the LEaP program.
+The HEAD_NAME and TAIL_NAME lines identify the atoms that will connect to the previous and following amino acids, respectively. The MAIN_CHAIN lines list the atoms along the chain that connect the head and the tail atoms. The OMIT_NAME lines list the atoms in the nonstandard residue that should be removed from the final structure, as they are not present in the intact protein. The PRE_HEAD_TYPE and POST_TAIL_TYPE lines let ```prepgen``` know what atom types in the surrounding protein will be used for the covalent connection. The CHARGE line gives the total charge on the residue; ```prepgen``` will ensure that the charges of the ”omitted” atoms are redistributed among the remaining atoms so that the total charge is correct (i.e, 0 in this case).The prepgen program then outputs ```.prepin``` files which are then inputed into the ```parmchk2``` program that create the ```.frcmod``` files using parameters from the ```gaff.dat``` and ```parm10.dat``` parameter files. Next the ```.prepin``` and ```.frcmod``` files were read into the LEaP program.
 
 ```bash
 
@@ -290,7 +290,7 @@ Then to carry out the rest of the LEaP procedure for the NSR enzyme, solvating n
 > save COMNEUT com.neutral0.prmtop com.neutral0.prmcrd
 > saveamberparm COMNEUT com.neutral0.prmtop com.neutral0.prmcrd
 ```
-These commands produced many files that needed to be used with ```sander```, ```cpptraj``` and ```MMPBSA.py```. Next the sander program was used to carry out the molecular simulation. To use this program an input file needed to be created that would inform the program of the physical processes to simulate. Noting the good results of a previous study [Khosa], the same parameters for the minimisation, heating and  equlibration stages were employed. Firstly the system was minimisied in a two stage process. The input file for the first minimisation stage looks like this.
+These commands produced many files that needed to be used with ```sander```, ```cpptraj``` and ```MMPBSA.py```. Next the sander program was used to carry out the molecular simulation. To use this program an input file needed to be created that would inform the program of the physical processes to simulate. Noting the good results of a previous study [2], the same parameters for the minimisation, heating and  equlibration stages were employed. Firstly the system was minimisied in a two stage process. The input file for the first minimisation stage looks like this.
 
 ```bash
 min.in: 
@@ -307,7 +307,7 @@ sander -O -i min.in -o min.out -p com.wat.neutral2.prmtop -c com.wat.neutral2.pr
 -r 01_Min.rst -inf 01_Min.mdinfo -ref com.wat.neutral2.prmcrd
 ```
 
-The sander program takes the input ```file min.in``` with the instructions on how to minimise, the topology file ```com.wat.neutral2.prmtop``` also as input, the coordinate file ```com.wat.neutral2.prmcrd``` again as input and the cooridinate file to act as reference for the restraint intsructions. It outputs the ```min.out``` file containing information on each time step of the minisation phase and a restart file ```01_Min.rst``` so the command for the second stage knows the coordinates to start from.
+The sander program takes the input file ```min.in``` with the instructions on how to minimise, the topology file ```com.wat.neutral2.prmtop``` also as input, the coordinate file ```com.wat.neutral2.prmcrd``` again as input and the cooridinate file to act as reference for the restraint intsructions. It outputs the ```min.out``` file containing information on each time step of the minisation phase and a restart file ```01_Min.rst``` so the command for the second stage knows the coordinates to start from.
 
 ```bash
 sander -O -i min.in -o min.out -p com.wat.neutral2.prmtop -c com.wat.neutral2.prmcrd /
@@ -337,7 +337,7 @@ ntt=1, tautp=2.0, ig=-1, ntc = 2, ntf = 2, ntp = 1, ntb=2, nrespa=1, ntwe = 0, c
 ntr = 1, restraintmask = ':1-287 & !@H=', restraint_wt = 5.0, /
 ```
 
-Next the positional restraints were gradually reduced from 5 kcal/mol/Angstroms^2 to 0 kcal/mol/Angstroms^2 while keeping the volume constant. This was achieved in MD simulation by a series of 6 stages (each stage having a different input file with the value for ```restraint_wt``` being going from 5 to 0). Each stage was 10 picoseconds long. As an example here's the input file for when the restraint was 3 kcal/mol/Angstroms^2
+Next the positional restraints were gradually reduced from 5 kcal/mol/Angstroms^2 to 0 kcal/mol/Angstroms^2 while keeping the volume constant. This was achieved in MD simulation by a series of 6 stages (each stage having a different input file with the value for ```restraint_wt``` going from 5 to 0). Each stage was 10 picoseconds long. As an example here's the input file for when the restraint was 3 kcal/mol/Angstroms^2
 
 ```bash
 equib4.in:heat com.neutral0
@@ -348,7 +348,7 @@ ntt=1, tautp=2.0, ig=-1, ntc = 2, ntf = 2, ntp = 0,
 ntb=1, nrespa=2, ntwe = 0, cut = 8.0, 
 ntr = 1, restraintmask = ':1-287 & !@H=', restraint_wt = 3.0, /
 ```
-The commands to run these processes look like so. Note also the ```.mdcrd files```. These are the most important files (trajectory files) as they contain the binary informtaion that the programs ```cpptraj``` and ```MMPBSA.py``` will make use of to analyse the MD trajectories. 
+The commands to run these processes look like so. Note also the ```.mdcrd files```. These are the most important files (trajectory files) as they contain the binary information that the programs ```cpptraj``` and ```MMPBSA.py``` will make use of to analyse the MD trajectories. 
 
 ```bash
 $ sander -O -i heat.in -o heat.out -p com.wat.neutral2.prmtop -c 01\_Min2.rst /
@@ -369,18 +369,18 @@ sander -O -i equib6.in -o equib6.out -p com.wat.neutral2.prmtop -c equib5.rst /
 -r equib7.rst -ref equib6.rst -x equib7.mdcrd
 ```
 
-Finally the input file was changed to instruct a production run of 50 nanoseconds. This meant setting the total number of timesteps to =25000000. The command to run this part of the simulation uses the parallel processes program MPI (as otherwise it would take several years to complete the simulation). 
+Finally the input file was changed to instruct a production run of 50 nanoseconds. This meant setting the total number of timesteps to ```nstlim=25000000```. The command to run this part of the simulation uses the parallel processes program MPI (as otherwise it would take several years to complete the simulation). 
 
 ```bash
 $ mpirun -np 4 $AMBERHOME/bin/sander.MPI -O -i prodser1ns1.in -p com.wat.neutral2.prmtop 
 -c prod40.rst -r prod41.rst -o prod41.out -x prod41.mdcrd    
 ```
 
-For practical purposes the production run was split up into many stages (so as to able recover completed trajectory files in the event of a crash and also to not "hog the server"). So the previous line of code shows very near to the end of all the timesteps (from 33 to 34 nanoseconds).  Througout the full MD simulation long-range electrostatic interactions were treated using the particle mesh Ewald method [ref]. A distance cut off of 8 Angstroms was used to define short range electrostatic interactions. All bonds involving hydrogen were constrained by using the SHAKE algorithim [ref] which also required setting the timestep to be 2 femtoseconds. Trajectory files were created every picosecond. 
+For practical purposes the production run was split up into many stages (so as to able recover completed trajectory files in the event of a crash and also to not "hog the server"). So the previous line of code shows very near to the end of all the timesteps (from 33 to 34 nanoseconds).  Throughout the full MD simulation long-range electrostatic interactions were treated using the particle mesh Ewald method [9]. A distance cut off of 8 Angstroms was used to define short range electrostatic interactions. All bonds involving hydrogen were constrained by using the SHAKE algorithim [10,11] which also required setting the timestep to be 2 femtoseconds. Trajectory files were created every picosecond. 
 
 ## Trajectory Analysis
 
-To analyse the MD trajectory the programs ```cpptraj``` and  ```MMPBSA.py``` were used. To calculate the distance between the carbonyl carbon of CYS28 (NSR cleave point in nisin) and the sidechain Oxygen in residue 236 of NSR (active site) the ```dist``` command in ```cpptraj``` was used. The only requirments for ```cpptraj``` were the topology file ```com.wat.neutral2.prmtop``` and an input file specifying what trajectory files were to be used. This is an example of the ```cpptraj``` command used and also the contents of the input file.
+To analyse the MD trajectory the programs ```cpptraj``` and  ```MMPBSA.py``` were used. To calculate the distance between the carbonyl carbon of CYS28 (NSR cleave point in nisin) and the sidechain Oxygen in residue 236 of NSR (active site) the ```dist``` command in ```cpptraj``` was used. The only requirements for ```cpptraj``` were the topology file ```com.wat.neutral2.prmtop``` and an input file specifying what trajectory files were to be used. This is an example of the ```cpptraj``` command used and also the contents of the input file.
 
 ```bash
 $ cpptraj -p com.wat.neutral2.prmtop -i trajfiles.atom.ptraj
