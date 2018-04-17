@@ -383,18 +383,18 @@ For practical purposes the production run was split up into many stages (so as t
 To analyse the MD trajectory the programs ```cpptraj``` and  ```MMPBSA.py``` were used. To calculate the distance between the carbonyl carbon of CYS28 (NSR cleave point in nisin) and the sidechain Oxygen in residue 236 of NSR (active site) the ```dist``` command in ```cpptraj``` was used. The only requirements for ```cpptraj``` were the topology file ```com.wat.neutral2.prmtop``` and an input file specifying what trajectory files were to be used. This is an example of the ```cpptraj``` command used and also the contents of the input file.
 
 ```bash
-$ cpptraj -p com.wat.neutral2.prmtop -i trajfiles.atom.ptraj
+$ cpptraj -p com.wat.neutral2.prmtop -i trajfiles.atom2.ptraj
 
-# Contents of input file trajfiles.atom.ptraj
-trajin heat.mdcrd
-trajin equib1.mdcrd
+# Contents of input file trajfiles.atom2.ptraj
+trajin heat.mdcrd                                               
+trajin equib1.mdcrd                                             
 trajin equib2.mdcrd
 trajin equib3.mdcrd
 trajin equib4.mdcrd
 trajin equib5.mdcrd
 trajin equib6.mdcrd
 trajin equib7.mdcrd
-trajin test2.mdcrd
+trajin test2.mdcrd 
 trajin prod2.mdcrd
 trajin prod3.mdcrd
 trajin prod4.mdcrd
@@ -429,9 +429,22 @@ trajin prod32.mdcrd
 trajin prod33.mdcrd
 trajin prod34.mdcrd
 trajin prod35.mdcrd
+trajin prod36.mdcrd
+trajin prod37.mdcrd
+trajin prod38.mdcrd
+trajin prod39.mdcrd
+trajin prod40.mdcrd
+trajin prod41.mdcrd
+trajin prod42.mdcrd
+trajin prod43.mdcrd
+trajin prod44.mdcrd
+trajin prod45.mdcrd
+trajin prod46.mdcrd
+trajin prod47.mdcrd
+trajin prod48.mdcrd
+trajin prod49.mdcrd
 
-
-distance SER236OtoCYS28C :206@3402 :294@4762 out SER236OtoCYS28C
+distance SER236OtoCYS28Cnyl50 :206@3402 :294@4762 out SER236OtoCYS28Cnyl50
 
 run
 ```
