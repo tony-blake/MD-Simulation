@@ -450,21 +450,21 @@ run
 ```
 
 
-After the trajectory analysis has finished the output file SER236OtoCYS28C contains the distance between both points of interest for every picosecond of the trajectory. These can then be plotted using the ggplot2 program in R. The next part of the trajectory analysis involves determining what hydrogen bonds have formed over the duration of the simulation (35 nanoseconds). This was achieved by again using the ```cpptraj``` program and a different input file. Here is an example of the code and input file.
+After the trajectory analysis has finished the output file SER236OtoCYS28C contains the distance between both points of interest for every picosecond of the trajectory. These can then be plotted using the ggplot2 program in R. The next part of the trajectory analysis involves determining what hydrogen bonds have formed over the duration of the simulation (50 nanoseconds). This was achieved by again using the ```cpptraj``` program and a different input file. Here is an example of the code and input file.
 
 ```bash
 $ cpptraj -p com.wat.neutral2.prmtop -i hbondtraj.ptraj
 
 # Contents of input file hbondtraj.ptraj
-trajin heat.mdcrd
-trajin equib1.mdcrd
+trajin heat.mdcrd                                               
+trajin equib1.mdcrd                                             
 trajin equib2.mdcrd
 trajin equib3.mdcrd
 trajin equib4.mdcrd
 trajin equib5.mdcrd
 trajin equib6.mdcrd
 trajin equib7.mdcrd
-trajin test2.mdcrd
+trajin test2.mdcrd 
 trajin prod2.mdcrd
 trajin prod3.mdcrd
 trajin prod4.mdcrd
@@ -499,22 +499,41 @@ trajin prod32.mdcrd
 trajin prod33.mdcrd
 trajin prod34.mdcrd
 trajin prod35.mdcrd
+trajin prod36.mdcrd
+trajin prod37.mdcrd
+trajin prod38.mdcrd
+trajin prod39.mdcrd
+trajin prod40.mdcrd
+trajin prod41.mdcrd
+trajin prod42.mdcrd
+trajin prod43.mdcrd
+trajin prod44.mdcrd
+trajin prod45.mdcrd
+trajin prod46.mdcrd
+trajin prod47.mdcrd
+trajin prod48.mdcrd
+trajin prod49.mdcrd
 
 
-hbond All out All.hbvtime.dat solventdonor :WAT solventacceptor :WAT@O \
-  avgout All.UU.avg.dat solvout All.UV.avg.dat bridgeout All.bridge.avg.dat
+hbond All out All.hbvtimeall49ser.dat solventdonor :WAT solventacceptor :WAT@O \
+  avgout All.UU.avg.all49ser.dat solvout All.UV.all49ser.avg.dat bridgeout All.bridge.all49ser.avg.dat
 
-hbond Backbone :288-299@C,O,N,H avgout BB.avg.dat series uuseries bbhbond
+hbond Backbone :1-300@C,O,N,H avgout BB.all49ser.avg.dat series uuseries bbhbondall49ser 
 
-create nhbvtime All[UU] Backbone[UU] All[UV] All[Bridge]
 
-rms BBrmsd :288-299@C,CA,N out BBrmsd
+create nhbvtimeall49ser All[UU] Backbone[UU] All[UV] All[Bridge]
+
+rms BBrmsd :1-300@C,CA,N out BBrmsdall49ser
 
 run
+
+lifetime Backbone[solutehb] out backbone.all49ser.lifetime.dat
+
+runanalysis
 ```
 
 
-The important file to note here is the ```All.UU.avg.dat``` file. This contains all the percentages for hydrogen bond formation over the course of the trajectory. After the hydrogen bond calculation the ```MMPBSA.py``` was used to calculate the binding energies of the residues in nisin and the residues in the active site of (TASSAEM motif) NSR. This also required many of the files prepared earlier in the analysis using the LEaP program. Again here is an example of the command and the contents of the input file.
+The important file to note here is the ```All.UU.avg.dat``` file. This contains all the percentages for hydrogen bond formation over the course of the trajectory. After the hydrogen bond calculation the ```MMPBSA.py``` was used to calculate the binding energies of the residues in nisin and the residues in the active site (TASSAEM motif) of NSR. This also required many of the files prepared earlier in the analysis using the LEaP program. Again here is an example of the command and the contents of the input file.
 
 ```bash
 $AMBERHOME/bin/MMPBSA.py -O -i mmpbsa_per_res_decomp.in /
@@ -535,7 +554,7 @@ Per-residue GB and PB decomposition
 /
 ```
 
-One final point point to note. For the binding enbergy calculations the MM-GBSA (Generalised Born) method was used and not the MM-PBSA (Poisson-Boltzmann) method. The ```FINAL_DECOMP_MMPBSA.dat``` file has all the values of the binding energies for the residues specified in the input file and can then plotted using the ggplot2 in R \cite{gentleman, hadley}. 
+One final point to note. For the binding energy calculations the MM-GBSA (Generalised Born) method was used and not the MM-PBSA (Poisson-Boltzmann) method. The ```FINAL_DECOMP_MMPBSA.dat``` file has all the values of the binding energies for the residues specified in the input file and can then be plotted using the ggplot2 in R [12,13]. 
 
 Lastly, the program to extract the RMSD and RMSF information from the trajectory files is almost the same as that used for the distance information extraction. 
 
