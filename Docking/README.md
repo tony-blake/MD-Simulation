@@ -11,6 +11,8 @@ Description of Directory Contents
 
 ```nisnPROVAL.pdb``` - This is pdb file created from mutating the ```1wco_N.pdn``` file in the Chimera software so that the SER residue and the isoleucine residue change to the proline and valine residues respectively.  
 
+```034-chimera_vina.pdf``` - This is a pdf file that outlines visually the steps to be used (up to but not including "set ligand options) in the event that the error occurs as stated in the update:28/07/18.
+
 
 UPDATE: 28/07/18
 ================
