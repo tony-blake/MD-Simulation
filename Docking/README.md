@@ -16,3 +16,5 @@ UPDATE: 28/07/18
 ================
 
 Following the 3 steps in ```2012_ADTtut.pdf``` may result in an error. When performing step 3 and after the HOH* and * have been added a different warning appears saying no atoms have been selected
+
+![screen shot 2018-07-28 at 19 26 33](https://user-images.githubusercontent.com/13021392/43359623-2dc49252-929d-11e8-8a3c-8ff111e5d650.png)
