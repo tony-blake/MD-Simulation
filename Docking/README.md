@@ -27,4 +27,5 @@ If this happens close Autodock (not saving the project) and open up Chimera. You
 UPDATE: 01/01/25
 ================
 
-Alternative procedure for docking can be found here https://sbcb.bioch.ox.ac.uk/users/greg/teaching/docking-2012.html
+Alternative procedure for docking can be found here https://sbcb.bioch.ox.ac.uk/users/greg/teaching/docking-2012.html 
+Have also uploaded alternative procedure as a pdf "introduction to in-sillico docking"
